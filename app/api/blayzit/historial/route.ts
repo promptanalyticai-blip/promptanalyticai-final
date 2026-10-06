@@ -1,21 +1,13 @@
 // app/api/blayzit/analysis/route.ts
-
 import { NextResponse } from "next/server";
-import { Blayzit } from "@/services/blayzit";
+import { runBlayzit } from "@/services/blayzit";
 
 export async function GET() {
   try {
-    const analysis = await Blayzit.analisis();
-
-    return NextResponse.json({
-      ok: true,
-      analysis,
-    });
+    const history = await runBlayzit();
+    return NextResponse.json({ ok: true, history });
   } catch (error) {
-    console.error("BLAYZIT ANALYSIS ERROR:", error);
-    return NextResponse.json(
-      { error: "Error interno en BLAYZIT ANALYSIS." },
-      { status: 500 }
-    );
+    console.error("Blayzit history error:", error);
+    return NextResponse.json({ ok: false, error: String(error) }, { status: 500 });
   }
 }
