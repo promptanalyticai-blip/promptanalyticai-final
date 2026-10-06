@@ -1,12 +1,14 @@
 // app/layout.tsx
-import "./globals.css"
-import { cn } from "@/lib/utils"
-import { ThemeProvider } from "@/components/ui/theme-provider"
+"use client";
+
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 export const metadata = {
   title: "BLAYZIT",
   description: "Enterprise SaaS",
-}
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,5 +19,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
