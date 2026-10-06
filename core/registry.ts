@@ -1,10 +1,14 @@
-// core/blayzit/registry.ts
-
+// core/registry.ts
 import { Blayzit } from "@/services/blayzit";
+import { getDnipMetrics } from "@/lib/dnip-engine";
+import { getAdipSummary } from "@/lib/adip-engine";
 
-export const BlayzitRegistry = {
-  engine: Blayzit.ejecutar,
-  analysis: Blayzit.analisis,
-  config: Blayzit.config,
-  utils: Blayzit.utils,
+export const EngineRegistry = {
+  blayzit: Blayzit,
+  dnip: {
+    metrics: getDnipMetrics,
+  },
+  adip: {
+    summary: getAdipSummary,
+  },
 };

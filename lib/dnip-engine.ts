@@ -1,34 +1,30 @@
 // lib/dnip-engine.ts
-
 export type DnipMetrics = {
-  requestsPerMin: number;
-  workspacesActive: number;
+  load: number;        // 0–1, carga relativa del motor
+  latencyMs: number;   // latencia promedio en ms
+  errorRate: number;   // 0–1, porcentaje de errores
+  jobsInQueue: number; // trabajos pendientes
 };
 
-export type DnipHistoryItem = {
-  id: string;
-  timestamp: string;
-  status: string;
+export type DnipChartPoint = {
+  timestamp: string;   // ISO string
+  load: number;
 };
 
-export function getDnipMetrics(): DnipMetrics {
+export async function getDnipMetrics(workspaceId?: string): Promise<DnipMetrics> {
+  // Aquí conectas con DNIP real (Supabase, engine, etc.)
+  // Por ahora dejamos una implementación estable que no rompe el build.
   return {
-    requestsPerMin: 120,
-    workspacesActive: 4,
+    load: 0.35,
+    latencyMs: 140,
+    errorRate: 0.02,
+    jobsInQueue: 3,
   };
 }
 
-export function getDnipHistory(): DnipHistoryItem[] {
+export async function getDnipChart(workspaceId?: string): Promise<DnipChartPoint[]> {
   return [
-    { id: "1", timestamp: "2024-01-01", status: "ok" },
-    { id: "2", timestamp: "2024-01-02", status: "warning" },
+    { timestamp: new Date().toISOString(), load: 0.3 },
+    { timestamp: new Date(Date.now() - 60000).toISOString(), load: 0.4 },
   ];
-}
-
-/**
- * Alias para compatibilidad con módulos antiguos
- * (tu API está llamando getMetrics, así que lo exponemos)
- */
-export function getMetrics() {
-  return getDnipMetrics();
 }

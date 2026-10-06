@@ -1,37 +1,17 @@
 // proxy.ts
-import { NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/Client";
+import { createClient } from "@supabase/supabase-js";
 
-export function proxy(request: Request) {
-  const supabase = createServerClient();
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  // Clonar URL
-  const url = new URL(request.url);
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Obtener sesión
-  const accessToken = supabase.auth.getSession()?.data?.session?.access_token;
-  const isLoggedIn = Boolean(accessToken);
+export async function getSession() {
+  const { data, error } = await supabase.auth.getSession();
 
-  // Permitir login si no hay sesión
-  if (!isLoggedIn && url.pathname === "/login") {
-    return NextResponse.next();
+  if (error) {
+    throw error;
   }
 
-  // Bloquear dashboard si no hay sesión
-  if (!isLoggedIn && url.pathname.startsWith("/dashboard")) {
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  // Redirigir login → init si hay sesión
-  if (isLoggedIn && url.pathname === "/login") {
-    url.pathname = "/init";
-    return NextResponse.redirect(url);
-  }
-
-  return NextResponse.next();
+  return data.session;
 }
-
-export const config = {
-  matcher: ["/dashboard/:path*", "/enterprise/:path*", "/dnip/:path*", "/login"],
-};

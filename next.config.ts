@@ -1,10 +1,11 @@
 // next.config.ts
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
   experimental: {
-    proxy: true,
+    serverActions: true,
+    // NO proxy aquí: Next 16 no lo soporta.
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
