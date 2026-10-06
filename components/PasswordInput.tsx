@@ -20,3 +20,5 @@ export function PasswordInput({ password, setPassword, valid }: PasswordInputPro
     </div>
   );
 }
+
+export default PasswordInput;

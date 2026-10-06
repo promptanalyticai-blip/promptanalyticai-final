@@ -1,46 +1,32 @@
 // components/dnip/dnip-dashboard.tsx
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
+import React from "react";
+import { getDnipMetrics, getDnipHistory, DnipMetrics, DnipHistoryItem } from "@/lib/dnip-engine";
 
-import { DnipHistoryItem, DnipMetrics } from "@/lib/dnip-engine";
-
-export default function DnipDashboard() {
-  const metrics: DnipMetrics = {
-    requestsPerMin: 120,
-    workspacesActive: 4,
-  };
-
-  const history: DnipHistoryItem[] = [
-    { id: "1", timestamp: "2024-01-01", status: "ok" },
-  ];
+export async function DnipDashboard() {
+  const metrics: DnipMetrics = await getDnipMetrics();
+  const history: DnipHistoryItem[] = await getDnipHistory();
 
   return (
-    <Tabs>
-      <TabsList>
-        <TabsTrigger className="px-4 py-2">Metrics</TabsTrigger>
-        <TabsTrigger className="px-4 py-2">History</TabsTrigger>
-      </TabsList>
+    <div className="space-y-4">
+      <section className="rounded-lg border bg-card p-4">
+        <h2 className="text-lg font-semibold">Estado DNIP</h2>
+        <p className="text-sm">Load: {Math.round(metrics.load * 100)}%</p>
+        <p className="text-sm">Latency: {metrics.latencyMs} ms</p>
+        <p className="text-sm">Error rate: {Math.round(metrics.errorRate * 100)}%</p>
+        <p className="text-sm">Jobs in queue: {metrics.jobsInQueue}</p>
+      </section>
 
-      <TabsContent>
-        <div className="p-4">
-          <p>Requests/min: {metrics.requestsPerMin}</p>
-          <p>Workspaces active: {metrics.workspacesActive}</p>
-        </div>
-      </TabsContent>
-
-      <TabsContent>
-        <div className="p-4">
-          {history.map((h) => (
-            <div key={h.id}>
-              {h.timestamp} — {h.status}
-            </div>
-          ))}
-        </div>
-      </TabsContent>
-    </Tabs>
+      <section className="space-y-2">
+        <h3 className="text-sm font-semibold">Historial</h3>
+        {history.map((item) => (
+          <div key={item.id} className="flex justify-between text-xs">
+            <span>{new Date(item.timestamp).toLocaleTimeString()}</span>
+            <span>{Math.round(item.load * 100)}% · {item.latencyMs} ms · {Math.round(item.errorRate * 100)}%</span>
+          </div>
+        ))}
+      </section>
+    </div>
   );
 }
+
+export default DnipDashboard;

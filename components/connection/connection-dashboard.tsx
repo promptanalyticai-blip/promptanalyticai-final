@@ -1,28 +1,27 @@
 // components/connection/connection-dashboard.tsx
-"use client";
+import React, { useEffect, useState } from "react";
+import { getDnipMetrics, DnipMetrics } from "@/lib/dnip-engine";
 
-import { useEffect, useState } from "react";
-import { getDnipMetrics } from "@/lib/dnip-engine";
-
-export default function ConnectionDashboard() {
-  const [metrics, setMetrics] = useState<{
-    requestsPerMin: number;
-    workspacesActive: number;
-  } | null>(null);
+export function ConnectionDashboard() {
+  const [metrics, setMetrics] = useState<DnipMetrics | null>(null);
 
   useEffect(() => {
-    const data = getDnipMetrics();
-    setMetrics(data);
+    (async () => {
+      const m = await getDnipMetrics();
+      setMetrics(m);
+    })();
   }, []);
 
-  if (!metrics) return <div>Loading...</div>;
+  if (!metrics) return <p className="text-sm">Cargando métricas…</p>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-2">DNIP Connection Overview</h2>
-
-      <p>Requests per minute: {metrics.requestsPerMin}</p>
-      <p>Active workspaces: {metrics.workspacesActive}</p>
+    <div className="space-y-2 text-sm">
+      <p>Load: {Math.round(metrics.load * 100)}%</p>
+      <p>Latency: {metrics.latencyMs} ms</p>
+      <p>Error rate: {Math.round(metrics.errorRate * 100)}%</p>
+      <p>Jobs in queue: {metrics.jobsInQueue}</p>
     </div>
   );
 }
+
+export default ConnectionDashboard;
