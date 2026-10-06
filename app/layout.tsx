@@ -1,4 +1,3 @@
-// app/layout.tsx
 import "./globals.css";
 import { ThemeProviderWrapper } from "@/components/ui/theme-provider-wrapper";
 
