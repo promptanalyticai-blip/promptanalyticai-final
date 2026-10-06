@@ -1,34 +1,28 @@
 // components/connection/connection-dashboard.tsx
-import { useState, useEffect } from "react";
+"use client";
 
-type ConnectionData = {
-  workspace: string;
-  dnip: {
-    status: string;
-    requests: number;
-  };
-};
+import { useEffect, useState } from "react";
+import { getDnipMetrics } from "@/lib/dnip-engine";
 
 export default function ConnectionDashboard() {
-  const [data, setData] = useState<ConnectionData | null>(null);
+  const [metrics, setMetrics] = useState<{
+    requestsPerMin: number;
+    workspacesActive: number;
+  } | null>(null);
 
   useEffect(() => {
-    setData({
-      workspace: "default",
-      dnip: {
-        status: "ok",
-        requests: 120,
-      },
-    });
+    const data = getDnipMetrics();
+    setMetrics(data);
   }, []);
 
-  if (!data) return <div>Loading...</div>;
+  if (!metrics) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h2>Workspace: {data.workspace}</h2>
-      <p>DNIP Status: {data.dnip.status}</p>
-      <p>Requests: {data.dnip.requests}</p>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-2">DNIP Connection Overview</h2>
+
+      <p>Requests per minute: {metrics.requestsPerMin}</p>
+      <p>Active workspaces: {metrics.workspacesActive}</p>
     </div>
   );
 }
