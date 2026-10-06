@@ -1,16 +1,23 @@
 // lib/dnip-engine.ts
-export type DnipMetrics = {
-  errorRate: number
-  latencyMs: number
-  load: number
-  jobsInQueue: number
-}
+export type DnipChartPoint = {
+  timestamp: string;
+  value: number;
+};
 
-export function getMetrics(): DnipMetrics {
+export type DnipHistoryItem = {
+  id: string;
+  timestamp: string;
+  status: string;
+};
+
+export type DnipMetrics = {
+  requestsPerMin: number;
+  workspacesActive: number;
+};
+
+export function getDnipMetrics(): DnipMetrics {
   return {
-    errorRate: 0,
-    latencyMs: 120,
-    load: 40,
-    jobsInQueue: 10,
-  }
+    requestsPerMin: 120,
+    workspacesActive: 4,
+  };
 }

@@ -1,17 +1,21 @@
-// lib/adip/context.ts
-import { supabase } from "@/lib/supabase/Client";
+// modules/adip/core/context.ts
+import { createClient } from "@/lib/supabase/Client";
 
-export async function getADIPContext() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const supabase = createClient();
 
-  if (!user) return null;
+export type AdipContext = {
+  supabase: typeof supabase;
+  tenantId: string | null;
+  userId: string | null;
+};
 
+export function createAdipContext(
+  tenantId: string | null,
+  userId: string | null
+): AdipContext {
   return {
-    user,
-    role: "user",
-    companyId: "default-company",
-    workspaceId: "default-workspace",
+    supabase,
+    tenantId,
+    userId,
   };
 }
