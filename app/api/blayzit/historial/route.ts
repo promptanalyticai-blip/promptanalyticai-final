@@ -1,4 +1,4 @@
-// app/api/blayzit/analysis/route.ts
+// app/api/blayzit/historial/route.ts
 import { NextResponse } from "next/server";
 import { runBlayzit } from "@/services/blayzit";
 
