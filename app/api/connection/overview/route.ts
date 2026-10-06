@@ -6,5 +6,6 @@ import { getAdipSummary } from "@/lib/adip-engine";
 export async function GET() {
   const dnip = await getDnipMetrics();
   const adip = await getAdipSummary();
+
   return NextResponse.json({ ok: true, dnip, adip });
 }
