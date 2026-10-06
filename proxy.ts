@@ -8,10 +8,12 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function getSession() {
   const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    throw error;
-  }
-
+  if (error) throw error;
   return data.session;
 }
+
+// Turbopack exige un default export
+export default {
+  supabase,
+  getSession,
+};

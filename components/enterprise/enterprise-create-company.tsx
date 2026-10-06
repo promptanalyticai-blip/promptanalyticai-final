@@ -1,6 +1,4 @@
 // components/enterprise/enterprise-create-company.tsx
-import React from "react";
-
 type EnterpriseCreateCompanyProps = {
   userId: string;
 };
@@ -12,3 +10,5 @@ export function EnterpriseCreateCompany({ userId }: EnterpriseCreateCompanyProps
     </div>
   );
 }
+
+export default EnterpriseCreateCompany;

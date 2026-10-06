@@ -1,6 +1,4 @@
 // components/enterprise/enterprise-bind-dnip.tsx
-import React from "react";
-
 type EnterpriseBindDnipProps = {
   workspaceId: string;
 };
@@ -12,3 +10,5 @@ export function EnterpriseBindDnip({ workspaceId }: EnterpriseBindDnipProps) {
     </div>
   );
 }
+
+export default EnterpriseBindDnip;

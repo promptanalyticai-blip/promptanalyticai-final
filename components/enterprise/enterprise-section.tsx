@@ -1,6 +1,4 @@
 // components/enterprise/enterprise-section.tsx
-import React from "react";
-
 type EnterpriseSectionProps = {
   title: string;
   children: React.ReactNode;
@@ -14,3 +12,5 @@ export function EnterpriseSection({ title, children }: EnterpriseSectionProps) {
     </section>
   );
 }
+
+export default EnterpriseSection;

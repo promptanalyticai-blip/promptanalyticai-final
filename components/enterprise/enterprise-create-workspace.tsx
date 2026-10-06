@@ -1,6 +1,4 @@
 // components/enterprise/enterprise-create-workspace.tsx
-import React from "react";
-
 type EnterpriseCreateWorkspaceProps = {
   companyId: string;
 };
@@ -12,3 +10,5 @@ export function EnterpriseCreateWorkspace({ companyId }: EnterpriseCreateWorkspa
     </div>
   );
 }
+
+export default EnterpriseCreateWorkspace;

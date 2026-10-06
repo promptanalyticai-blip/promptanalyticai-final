@@ -1,6 +1,4 @@
 // components/enterprise/enterprise-card.tsx
-import React from "react";
-
 type EnterpriseCardProps = {
   title: string;
   children: React.ReactNode;
@@ -14,3 +12,5 @@ export function EnterpriseCard({ title, children }: EnterpriseCardProps) {
     </div>
   );
 }
+
+export default EnterpriseCard;
