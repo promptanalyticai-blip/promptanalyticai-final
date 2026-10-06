@@ -1,31 +1,22 @@
-///components/PasswordInput.tsx
-import { useState } from "react";
+// components/PasswordInput.tsx
+import React from "react";
 
-export default function PasswordInput({ password, setPassword, valid }) {
-  const [show, setShow] = useState(false);
+type PasswordInputProps = {
+  password: string;
+  setPassword: (value: string) => void;
+  valid: boolean;
+};
 
+export function PasswordInput({ password, setPassword, valid }: PasswordInputProps) {
   return (
-    <div className="input-group">
-      <label>Password</label>
-
-      <div className="password-wrapper">
-        <input
-          aria-label="Campo de contraseña"
-          type={show ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={!valid && password.length > 0 ? "input-error" : ""}
-        />
-
-        <span
-          className="password-toggle"
-          role="button"
-          aria-label="Mostrar u ocultar contraseña"
-          onClick={() => setShow(!show)}
-        >
-          {show ? "👁‍🗨" : "👁"}
-        </span>
-      </div>
+    <div className="space-y-2">
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full rounded border px-3 py-2"
+      />
+      {!valid && <p className="text-xs text-red-500">Password inválido</p>}
     </div>
   );
 }

@@ -1,10 +1,16 @@
 // components/enterprise/enterprise-section.tsx
+import React from "react";
 
-export default function EnterpriseSection({ title, children }) {
+type EnterpriseSectionProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+export function EnterpriseSection({ title, children }: EnterpriseSectionProps) {
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-      {children}
-    </div>
-  )
+    <section className="space-y-2">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      <div>{children}</div>
+    </section>
+  );
 }

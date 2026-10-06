@@ -1,10 +1,16 @@
 // components/enterprise/enterprise-card.tsx
+import React from "react";
 
-export default function EnterpriseCard({ title, children }) {
+type EnterpriseCardProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+export function EnterpriseCard({ title, children }: EnterpriseCardProps) {
   return (
-    <div className="rounded-xl bg-white/20 backdrop-blur-xl p-6 border border-white/40 shadow-lg">
-      <h2 className="text-xl font-semibold text-slate-800 mb-3">{title}</h2>
-      {children}
+    <div className="rounded-lg border bg-card p-4">
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <div className="mt-2">{children}</div>
     </div>
-  )
+  );
 }
