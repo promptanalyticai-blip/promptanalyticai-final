@@ -14,9 +14,7 @@ export default function ConnectionDashboard() {
     })();
   }, []);
 
-  if (!metrics) {
-    return <p className="text-sm">Cargando métricas…</p>;
-  }
+  if (!metrics) return <p className="text-sm">Cargando métricas…</p>;
 
   return (
     <div className="space-y-2 text-sm">
