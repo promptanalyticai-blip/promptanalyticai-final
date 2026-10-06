@@ -1,8 +1,10 @@
 // components/connection/connection-dashboard.tsx
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { getDnipMetrics, DnipMetrics } from "@/lib/dnip-engine";
 
-export function ConnectionDashboard() {
+export default function ConnectionDashboard() {
   const [metrics, setMetrics] = useState<DnipMetrics | null>(null);
 
   useEffect(() => {
@@ -12,7 +14,9 @@ export function ConnectionDashboard() {
     })();
   }, []);
 
-  if (!metrics) return <p className="text-sm">Cargando métricas…</p>;
+  if (!metrics) {
+    return <p className="text-sm">Cargando métricas…</p>;
+  }
 
   return (
     <div className="space-y-2 text-sm">
@@ -23,5 +27,3 @@ export function ConnectionDashboard() {
     </div>
   );
 }
-
-export default ConnectionDashboard;

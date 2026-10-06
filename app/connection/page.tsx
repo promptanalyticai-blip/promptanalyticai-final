@@ -1,7 +1,12 @@
 // app/connection/page.tsx
+"use client";
 
-import ConnectionDashboard from "@/components/connection/connection-dashboard"
+import ConnectionDashboard from "@/components/connection/connection-dashboard";
 
 export default function ConnectionPage() {
-  return <ConnectionDashboard />
+  return (
+    <div className="p-4">
+      <ConnectionDashboard />
+    </div>
+  );
 }
