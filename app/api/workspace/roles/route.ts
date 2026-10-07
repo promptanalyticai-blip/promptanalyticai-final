@@ -1,21 +1,42 @@
 // app/api/workspace/roles/route.ts
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/Client"
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const workspaceId = searchParams.get("workspaceId");
 
-const supabase = createClient()
+    if (!workspaceId) {
+      return NextResponse.json(
+        { error: "workspaceId requerido" },
+        { status: 400 }
+      );
+    }
 
-export async function POST(req: Request) {
-  const { userId, workspaceId } = await req.json()
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
-  const { data, error } = await supabase
-    .from("workspace_roles")
-    .select("rol")
-    .eq("user_id", userId)
-    .eq("workspace_id", workspaceId)
-    .single()
+    const { data, error } = await supabase
+      .from("roles")
+      .select("*")
+      .eq("workspace_id", workspaceId);
 
-  if (error) return NextResponse.json({ role: "member" })
+    if (error) {
+      return NextResponse.json(
+        { error: "Error obteniendo roles" },
+        { status: 500 }
+      );
+    }
 
-  return NextResponse.json({ role: data.rol })
+    return NextResponse.json(data, { status: 200 });
+  } catch (err) {
+    console.error("WORKSPACE ROLES ERROR:", err);
+    return NextResponse.json(
+      { error: "Error interno obteniendo roles" },
+      { status: 500 }
+    );
+  }
 }

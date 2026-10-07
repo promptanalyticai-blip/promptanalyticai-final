@@ -1,4 +1,6 @@
 // components/LoginCard.tsx
+"use client";
+
 import LogoAnimated from "./LogoAnimated";
 import OAuthButtons from "./OAuthButtons";
 import PasswordInput from "./PasswordInput";
@@ -8,22 +10,68 @@ import ValidationMessages from "./ValidationMessages";
 import LoadingButton from "./LoadingButton";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "@/utils/validation";
+import { saveSession } from "@/lib/session";
 
 export default function LoginCard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const emailValid = validateEmail(email);
   const passwordValid = validatePassword(password);
 
-  const handleLogin = () => {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      alert("Ingresando… (demo)");
-    }, 1500);
-  };
+    setError("");
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Error en login");
+        setLoading(false);
+        return;
+      }
+
+      // Guardar sesión enterprise
+      saveSession(data);
+
+      // Redirección inteligente
+      if (!data.company) {
+        window.location.href = "/register/company";
+        return;
+      }
+
+      if (!data.workspace) {
+        window.location.href = "/register/workspace";
+        return;
+      }
+
+      if (!data.roles || data.roles.length === 0) {
+        window.location.href = "/error/role";
+        return;
+      }
+
+      // Todo OK → panel enterprise
+      window.location.href = "/enterprise";
+
+    } catch (err) {
+      setError("Error interno en login");
+    }
+
+    setLoading(false);
+  }
 
   return (
     <div className="login-card">
@@ -43,7 +91,7 @@ export default function LoginCard() {
       <OAuthButtons />
 
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleLogin}
         aria-label="Formulario de inicio de sesión"
       >
         <div className="input-group">
@@ -68,9 +116,14 @@ export default function LoginCard() {
           passwordValid={passwordValid}
         />
 
+        {error && (
+          <div className="error-text">
+            {error}
+          </div>
+        )}
+
         <LoadingButton
           loading={loading}
-          onClick={handleLogin}
           disabled={!emailValid || !passwordValid}
         >
           Ingresar
