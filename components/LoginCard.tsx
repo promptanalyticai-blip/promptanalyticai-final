@@ -1,53 +1,56 @@
 // components/LoginCard.tsx
 "use client";
 
-import LogoAnimated from "./LogoAnimated";
-import OAuthButtons from "./OAuthButtons";
-import PasswordInput from "./PasswordInput";
-import MagicLink from "./MagicLink";
-import FooterEnterprise from "./FooterEnterprise";
-import ValidationMessages from "./ValidationMessages";
-import LoadingButton from "./LoadingButton";
 import { useState } from "react";
-import { validateEmail, validatePassword } from "@/utils/validation";
 import { saveSession } from "@/lib/session";
+
+type LoadingButtonProps = {
+  onClick: () => void;
+  loading: boolean;
+  disabled: boolean;
+  children: React.ReactNode;
+};
+
+function LoadingButton({ onClick, loading, disabled, children }: LoadingButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled || loading}
+      className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 text-white py-3 rounded-lg transition"
+    >
+      {loading ? "Cargando..." : children}
+    </button>
+  );
+}
 
 export default function LoginCard() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const emailValid = validateEmail(email);
-  const passwordValid = validatePassword(password);
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-
+  async function handleLogin() {
     setLoading(true);
     setError("");
 
     try {
       const res = await fetch("/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, pass }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Error en login");
+        setError(data.error || "Error iniciando sesión");
         setLoading(false);
         return;
       }
 
-      // Guardar sesión enterprise
       saveSession(data);
 
-      // Redirección inteligente
+      // Redirigir según estado de la sesión
       if (!data.company) {
         window.location.href = "/register/company";
         return;
@@ -58,89 +61,51 @@ export default function LoginCard() {
         return;
       }
 
-      if (!data.roles || data.roles.length === 0) {
-        window.location.href = "/error/role";
-        return;
-      }
-
-      // Todo OK → panel enterprise
       window.location.href = "/enterprise";
-
     } catch (err) {
-      setError("Error interno en login");
+      setError("Error interno en el login");
     }
 
     setLoading(false);
   }
 
   return (
-    <div className="login-card">
+    <div className="w-full max-w-md bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-xl text-white">
+      <h1 className="text-3xl font-bold mb-6 text-center">Iniciar Sesión</h1>
 
-      <h2 className="login-title">Bienvenido a BLAYZIT</h2>
-
-      <LogoAnimated />
-
-      <p className="login-tagline">
-        Tecnología para decisiones inteligentes — DNIP
-      </p>
-
-      <p className="login-branding">
-        DNIP — Arquitectura inteligente que convierte datos en decisiones.
-      </p>
-
-      <OAuthButtons />
-
-      <form
-        onSubmit={handleLogin}
-        aria-label="Formulario de inicio de sesión"
-      >
-        <div className="input-group">
-          <label>Email</label>
+      <div className="flex flex-col gap-4">
+        <div>
+          <label className="block mb-2 text-sm">Correo electrónico</label>
           <input
-            aria-label="Campo de email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={!emailValid && email.length > 0 ? "input-error" : ""}
+            className="w-full p-3 rounded bg-slate-800 border border-slate-700 text-white"
+            placeholder="tu@email.com"
           />
         </div>
 
-        <PasswordInput
-          password={password}
-          setPassword={setPassword}
-          valid={passwordValid}
-        />
+        <div>
+          <label className="block mb-2 text-sm">Contraseña</label>
+          <input
+            type="password"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            className="w-full p-3 rounded bg-slate-800 border border-slate-700 text-white"
+            placeholder="••••••••"
+          />
+        </div>
 
-        <ValidationMessages
-          emailValid={emailValid}
-          passwordValid={passwordValid}
-        />
-
-        {error && (
-          <div className="error-text">
-            {error}
-          </div>
-        )}
+        {error && <p className="text-red-400 text-sm">{error}</p>}
 
         <LoadingButton
+          onClick={handleLogin}
           loading={loading}
-          disabled={!emailValid || !passwordValid}
+          disabled={email.length < 3 || pass.length < 3}
         >
-          Ingresar
+          Iniciar sesión
         </LoadingButton>
-      </form>
-
-      <MagicLink email={email} />
-
-      <div className="login-links">
-        <a href="/forgot">¿Olvidaste tu contraseña?</a>
-        <a href="/register">Crear cuenta nueva</a>
       </div>
-
-      <nav aria-label="Enlaces legales y de soporte">
-        <FooterEnterprise />
-      </nav>
-
     </div>
   );
 }
