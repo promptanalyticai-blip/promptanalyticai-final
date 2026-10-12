@@ -1,6 +1,7 @@
 "use client";
 
-import TenantSelector from "@/app/dashboard/state/TenantSelector";
+import TenantSelector from "@/app/dashboard/components/TenantSelector";
+
 
 export default function Topbar() {
   return (
