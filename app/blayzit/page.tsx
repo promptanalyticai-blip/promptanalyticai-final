@@ -1,14 +1,21 @@
 //app/blayzit/page.tsx
-import BlayzitPanel from "./components/BlayzitPanel";
+export const dynamic = "force-dynamic";
 
 export default async function BlayzitPage() {
-  const res = await fetch("/api/blayzit/run", { method: "POST" });
+  const base = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
+
+  const res = await fetch(`${base}/api/blayzit/run`, {
+    method: "POST",
+  });
+
   const data = await res.json();
 
   return (
-    <BlayzitPanel
-      level={data.level}
-      blayzit={data.blayzit}
-    />
+    <div>
+      <h1>Blayzit Panel</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
   );
 }
