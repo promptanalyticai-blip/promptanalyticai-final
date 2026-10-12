@@ -1,11 +1,8 @@
 // app/dashboard/page.tsx
+export const dynamic = "force-dynamic";
+
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import DashboardContainer from "@/components/dashboard/DashboardContainer";
 
 export default function DashboardPage() {
-  return (
-    <DashboardShell>
-      <DashboardContainer />
-    </DashboardShell>
-  );
+  return <DashboardShell />;
 }
