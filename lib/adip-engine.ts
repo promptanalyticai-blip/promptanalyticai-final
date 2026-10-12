@@ -1,35 +1,120 @@
 // lib/adip-engine.ts
-export type AdipInsight = {
-  id: string;
-  title: string;
-  description: string;
-};
+// -------------------------------------------------------------
+// ADIP Engine — Motor de acciones adaptado por nivel
+// -------------------------------------------------------------
 
-export type AdipSummary = {
-  score: number;     // 0–1, salud general
-  focus: string[];   // áreas de foco: ["dnip", "latency", ...]
-};
+import { UserLevel } from "./level-engine";
 
-export async function getAdipSummary(workspaceId?: string): Promise<AdipSummary> {
-  // Conecta con tu motor ADIP real cuando quieras,
-  // pero este contrato NO cambia.
-  return {
-    score: 0.78,
-    focus: ["dnip", "latency", "errors"],
+interface ADIPInput {
+  level: UserLevel;
+  signals: any[];
+  decisions: any[];
+}
+
+interface ADIPOutput {
+  actions: any[];
+  meta: {
+    depth: "simple" | "strategic" | "operational";
+    tracking: "basic" | "medium" | "advanced";
+    departments: boolean;
   };
 }
 
-export async function getAdipInsights(workspaceId?: string): Promise<AdipInsight[]> {
+// -------------------------------------------------------------
+// Función principal: ejecutar ADIP según nivel
+// -------------------------------------------------------------
+
+export function runADIP(input: ADIPInput): ADIPOutput {
+  const { level, signals, decisions } = input;
+
+  // -----------------------------
+  // Nivel Individual — Simple
+  // -----------------------------
+  if (level === "individual") {
+    return {
+      actions: generateSimpleActions(signals, decisions),
+      meta: {
+        depth: "simple",
+        tracking: "basic",
+        departments: false,
+      },
+    };
+  }
+
+  // -----------------------------
+  // Nivel Profesional — Estratégico
+  // -----------------------------
+  if (level === "professional") {
+    return {
+      actions: generateStrategicActions(signals, decisions),
+      meta: {
+        depth: "strategic",
+        tracking: "medium",
+        departments: false,
+      },
+    };
+  }
+
+  // -----------------------------
+  // Nivel Empresa — Operativo
+  // -----------------------------
+  return {
+    actions: generateOperationalActions(signals, decisions),
+    meta: {
+      depth: "operational",
+      tracking: "advanced",
+      departments: true,
+    },
+  };
+}
+
+// -------------------------------------------------------------
+// Acciones por nivel
+// -------------------------------------------------------------
+
+function generateSimpleActions(signals: any[], decisions: any[]) {
   return [
     {
-      id: "1",
-      title: "DNIP estable bajo carga",
-      description: "El motor mantiene buen rendimiento con baja tasa de errores.",
+      type: "adjust",
+      message: "Ajusta tu estrategia en los días con mejor rendimiento.",
     },
     {
-      id: "2",
-      title: "Latencia aceptable",
-      description: "La latencia promedio está dentro de los límites definidos.",
+      type: "optimize",
+      message: "Optimiza el producto con mayor tendencia positiva.",
+    },
+  ];
+}
+
+function generateStrategicActions(signals: any[], decisions: any[]) {
+  return [
+    {
+      type: "segment",
+      message: "Segmenta tus clientes según los patrones detectados.",
+    },
+    {
+      type: "pricing",
+      message: "Ajusta precios en las categorías con mejor correlación.",
+    },
+    {
+      type: "campaign",
+      message: "Crea una campaña dirigida a los segmentos más fuertes.",
+    },
+  ];
+}
+
+function generateOperationalActions(signals: any[], decisions: any[]) {
+  return [
+    {
+      type: "assign",
+      message: "Asigna tareas al departamento correspondiente.",
+    },
+    {
+      type: "coordinate",
+      message: "Coordina acciones entre áreas para reducir riesgo.",
+    },
+    {
+      type: "protocol",
+      message: "Define un protocolo operativo basado en correlaciones críticas.",
     },
   ];
 }

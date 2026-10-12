@@ -1,18 +1,12 @@
+// app/layout.tsx
 import "./globals.css";
-import { ThemeProviderWrapper } from "@/components/ui/theme-provider-wrapper";
+import { GeistSans } from "geist/font/sans";
 
-export const metadata = {
-  title: "BLAYZIT",
-  description: "Enterprise SaaS",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className="font-sans min-h-screen bg-background text-foreground">
-        <ThemeProviderWrapper>
-          {children}
-        </ThemeProviderWrapper>
+    <html lang="en" className={GeistSans.className}>
+      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
+        {children}
       </body>
     </html>
   );

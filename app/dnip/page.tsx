@@ -1,9 +1,14 @@
-import DnipPanel from "@/components/dnip/DnipPanel";
+import DNIPPanel from "./components/DNIPPanel";
 
-export default function DnipPage() {
+export default async function DNIPPage() {
+  const res = await fetch("/api/dnip/run", { method: "POST" });
+  const data = await res.json();
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4 py-10">
-      <DnipPanel />
-    </main>
+    <DNIPPanel
+      level={data.level}
+      dnip={data.dnip}
+      adip={data.adip}
+    />
   );
 }

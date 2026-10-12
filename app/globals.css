@@ -21,7 +21,5 @@ body {
 
 /* NO forzar tema oscuro o claro */
 
-/* Animaciones suaves globales */
-* {
-  transition: all 0.25s ease;
-}
+/* Animaciones: NO globales, solo por clase */
+/* Usa Tailwind: transition, duration-200, ease-in-out */
