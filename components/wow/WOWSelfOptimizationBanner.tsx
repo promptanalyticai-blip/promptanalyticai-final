@@ -1,7 +1,7 @@
 //app/dashboard/components/WOWSelfOptimizationBanner.tsx
 "use client";
 
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWSelfOptimizationBanner() {
   const state = useWOWState();

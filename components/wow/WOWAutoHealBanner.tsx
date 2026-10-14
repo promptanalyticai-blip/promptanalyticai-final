@@ -1,7 +1,7 @@
 //app/dashboard/components/WOWAutoHealBanner.tsx
 "use client";
 
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWAutoHealBanner() {
   const state = useWOWState();

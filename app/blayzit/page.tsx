@@ -1,7 +1,7 @@
 // app/blayzit/page.tsx
-import DashboardPageHeader from "@/components/DashboardPageHeader";
-import DashboardSection from "@/components/DashboardSection";
-import DashboardGrid from "@/components/DashboardGrid";
+import DashboardGrid from "@/components/core/DashboardGrid";
+import DashboardPageHeader from "@/components/core/DashboardPageHeader";
+import DashboardSection from "@/components/core/DashboardSection";
 
 import OverviewCard from "@/components/dashboard/OverviewCard";
 import StatWidget from "@/components/dashboard/widgets/StatWidget";

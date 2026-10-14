@@ -2,7 +2,7 @@
 "use client";
 
 import { adaptWOWWidget } from "@/lib/wow-widget-engine";
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWWidget({ widget }: any) {
   const state = useWOWState();

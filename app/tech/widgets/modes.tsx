@@ -1,8 +1,7 @@
-//app/dashboard/widgets/modes.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDashboardTenant } from "../state/context";
+import { useDashboardTenant } from "../stat@/app/tech/state/context";
 import { getTenantModes } from "@/core/tenant/modes";
 
 export default function ModesWidget() {

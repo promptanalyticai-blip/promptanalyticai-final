@@ -1,8 +1,8 @@
-import DashboardShell from "@/components/dashboard/DashboardShell";
-import OccupancyChart from "@/components/dashboard/charts/OccupancyChart";
-import RevenueChart from "@/components/dashboard/charts/RevenueChart";
-import RiskChart from "@/components/dashboard/charts/RiskChart";
-import VacancyChart from "@/components/dashboard/charts/VacancyChart";
+import DashboardShell from "@/components/tech/DashboardShell";
+import OccupancyChart from "@/components/tech/charts/OccupancyChart";
+import RevenueChart from "@/components/tech/charts/RevenueChart";
+import RiskChart from "@/components/tech/charts/RiskChart";
+import VacancyChart from "@/components/tech/charts/VacancyChart";
 
 export default function AnalyticsPage() {
   return (

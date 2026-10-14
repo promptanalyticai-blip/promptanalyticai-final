@@ -1,7 +1,7 @@
 //app/dashboard/components/WOWMetaCognitionBanner.tsx
 "use client";
 
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWMetaCognitionBanner() {
   const state = useWOWState();

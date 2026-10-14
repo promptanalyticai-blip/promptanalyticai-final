@@ -2,7 +2,7 @@
 "use client";
 
 import WOWSkeleton from "../WOWSkeleton";
-import { useWOWState } from "../../state/WOWStateProvider";
+import { useWOWState } from ".././WOWStateProvider";
 
 export default function ChartSkeleton() {
   const { wow } = useWOWState();

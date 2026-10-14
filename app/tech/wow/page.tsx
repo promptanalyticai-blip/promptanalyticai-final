@@ -1,4 +1,3 @@
-//app/dashboard/wow/page.tsx
 import { StatWidget } from "@/components/dashboard/widgets/StatWidget";
 
 export default function WOWEnginePage() {

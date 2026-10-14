@@ -1,9 +1,9 @@
-import DashboardPageHeader from "@/components/DashboardPageHeader";
-import DashboardSection from "@/components/DashboardSection";
-import DashboardGrid from "@/components/DashboardGrid";
-import WOWThreatPanel from "@/components/WOWThreatPanel";
-import WOWCriticalBanner from "@/components/WOWCriticalBanner";
-import WOWRecoveryBanner from "@/components/WOWRecoveryBanner";
+iimport DashboardGrid from "@/components/core/DashboardGrid";
+import DashboardPageHeader from "@/components/core/DashboardPageHeader";
+import DashboardSection from "@/components/core/DashboardSection";
+import WOWCriticalBanner from "@/components/wow/WOWCriticalBanner";
+import WOWRecoveryBanner from "@/components/wow/WOWRecoveryBanner";
+import WOWThreatPanel from "@/components/wow/WOWThreatPanel";
 
 export default function WowPage() {
   return (

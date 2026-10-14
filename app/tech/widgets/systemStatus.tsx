@@ -1,8 +1,7 @@
-//app/dashboard/widgets/systemStatus.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDashboardTenant } from "../state/context";
+import { useDashboardTenant } from "../stat@/app/tech/state/context";
 import { getSystemStatus } from "@/core/system/status";
 
 export default function SystemStatusWidget() {

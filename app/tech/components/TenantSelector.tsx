@@ -1,7 +1,7 @@
 //app/dashboard/components/TenantSelector.tsx
 "use client";
 
-import { useDashboardTenant } from "../state/context";
+import { useDashboardTenant } from "../stat@/app/tech/state/context";
 
 const TENANTS = ["tenant-A", "tenant-B", "tenant-C"];
 

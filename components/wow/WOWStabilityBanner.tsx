@@ -1,7 +1,7 @@
 //app/dashboard/components/WOWStabilityBanner.tsx
 "use client";
 
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWStabilityBanner() {
   const state = useWOWState();

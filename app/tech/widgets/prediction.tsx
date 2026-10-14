@@ -1,8 +1,7 @@
-//app//dashboard/widgets/prediction.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDashboardTenant } from "../state/context";
+import { useDashboardTenant } from "../stat@/app/tech/state/context";
 import { wowPredictiveEngine } from "@/lib/wow-predictive-engine";
 
 export default function PredictionWidget() {

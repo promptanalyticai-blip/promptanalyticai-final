@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 import { StatWidget } from "@/components/dashboard/widgets/StatWidget";
 import { SimpleLineChart } from "@/components/dashboard/charts/SimpleLineChart";
 import { HeatmapPlaceholder } from "@/components/dashboard/charts/HeatmapPlaceholder";

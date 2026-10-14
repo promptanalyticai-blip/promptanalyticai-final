@@ -1,6 +1,6 @@
-import DashboardShell from "@/components/dashboard/DashboardShell";
-import RiskChart from "@/components/dashboard/charts/RiskChart";
-import VacancyChart from "@/components/dashboard/charts/VacancyChart";
+import DashboardShell from "@/components/tech/DashboardShell";
+import RiskChart from "@/components/tech/charts/RiskChart";
+import VacancyChart from "@/components/tech/charts/VacancyChart";
 
 export default function RiskPage() {
   return (

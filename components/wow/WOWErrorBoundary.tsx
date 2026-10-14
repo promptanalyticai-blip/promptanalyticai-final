@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 import { handleWOWError } from "@/lib/wow-error-handler";
 
 export default class WOWErrorBoundary extends React.Component {

@@ -1,4 +1,3 @@
-//app/dashboard/roles/page.tsx
 export default function RolesPage() {
   const roles = [
     { name: "Admin", description: "Acceso completo al sistema." },

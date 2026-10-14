@@ -1,7 +1,7 @@
 //app/dashboard/components/WOWCriticalBanner.tsx
 "use client";
 
-import { useWOWState } from "../state/WOWStateProvider";
+import { useWOWState } from "./WOWStateProvider";
 
 export default function WOWCriticalBanner() {
   const state = useWOWState();

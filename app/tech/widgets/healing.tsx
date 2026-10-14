@@ -1,8 +1,7 @@
-//app/dashboard/widgets/healing.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDashboardTenant } from "../state/context";
+import { useDashboardTenant } from "../stat@/app/tech/state/context";
 import { getAuditEvents } from "@/core/audit";
 
 export default function HealingWidget() {

@@ -1,5 +1,4 @@
-import DashboardShell from "@/components/dashboard/DashboardShell";
-
+import DashboardShell from "@/components/tech/DashboardShell";
 export default function ConnectionsPage() {
   return (
     <DashboardShell>

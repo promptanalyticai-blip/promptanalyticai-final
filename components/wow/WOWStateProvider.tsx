@@ -2,7 +2,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useDashboardTenant } from "./context";
+import { useDashboardTenant } from "@/app/tech/stat@/app/tech/stat@/app/tech/state/context";
 
 import { wowAutohealEngine } from "@/lib/wow-autoheal-engine";
 import { wowStabilityEngine } from "@/lib/wow-stability-engine";

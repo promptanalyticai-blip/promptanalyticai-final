@@ -1,5 +1,5 @@
-import DashboardShell from "@/components/dashboard/DashboardShell";
-import RevenueChart from "@/components/dashboard/charts/RevenueChart";
+import DashboardShell from "@/components/tech/DashboardShell";
+import RevenueChart from "@/components/tech/charts/RevenueChart";
 
 export default function RevenuePage() {
   return (

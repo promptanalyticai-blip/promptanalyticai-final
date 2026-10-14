@@ -1,4 +1,3 @@
-//app/dashboard/widgets/KPICard.tsx
 "use client";
 
 import { getWOWA11Y } from "@/lib/wow-a11y";
