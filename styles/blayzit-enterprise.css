@@ -1,0 +1,62 @@
+/* ===== BLAYZIT ENTERPRISE BASE ===== */
+
+:root {
+  --blz-bg: #f8f9fc;
+  --blz-card-bg: #ffffff;
+  --blz-border: #e5e7eb;
+  --blz-text: #1f2937;
+  --blz-subtext: #6b7280;
+  --blz-radius: 12px;
+  --blz-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* ===== PAGE WRAPPER ===== */
+
+.blz-page {
+  padding: 1rem;
+  background: var(--blz-bg);
+}
+
+/* ===== SECTION ===== */
+
+.blz-section {
+  background: var(--blz-card-bg);
+  border: 1px solid var(--blz-border);
+  border-radius: var(--blz-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--blz-shadow);
+}
+
+/* ===== GRID ===== */
+
+.blz-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .blz-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .blz-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== HEADER ===== */
+
+.blz-header-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--blz-text);
+}
+
+.blz-header-subtitle {
+  font-size: 0.9rem;
+  color: var(--blz-subtext);
+  margin-top: 0.25rem;
+}
