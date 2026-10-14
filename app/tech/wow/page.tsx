@@ -1,4 +1,4 @@
-import { StatWidget } from "@/components/dashboard/widgets/StatWidget";
+import { StatWidget } from "@/components/blayzit/StatWidget";
 
 export default function WOWEnginePage() {
   return (

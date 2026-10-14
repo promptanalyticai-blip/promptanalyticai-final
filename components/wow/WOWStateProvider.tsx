@@ -1,35 +1,33 @@
-//app/dashboard/state/WOWStateProvider.tsx
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useDashboardTenant } from "@/app/tech/stat@/app/tech/stat@/app/tech/stat@/app/tech/stat@/app/tech/state/context";
+import { useDashboardTenant } from "@/app/tech/state/context";
 
 import { wowAutohealEngine } from "@/lib/wow-autoheal-engine";
 import { wowStabilityEngine } from "@/lib/wow-stability-engine";
-import { wowPredictiveEngine } from "@/lib/wow-predictive-engine";
 
-const WOWStateContext = createContext<any>(null);
+const WOWStateContext = createContext(null);
 
-export function WOWStateProvider({ children }: { children: React.ReactNode }) {
-  const { tenantId } = useDashboardTenant();
-  const [state, setState] = useState<any>({
+export function WOWStateProvider({ children }) {
+  const tenant = useDashboardTenant();
+  const [state, setState] = useState({
+    stability: "stable",
     autoheal: false,
-    stability: false,
-    predictive: false,
+    threatLevel: "low",
   });
 
   useEffect(() => {
+    if (!tenant) return;
+
+    const stability = wowStabilityEngine(tenant);
+    const autoheal = wowAutohealEngine(tenant);
+
     setState({
-      autoheal: true,
-      stability: true,
-      predictive: true,
+      stability,
+      autoheal,
+      threatLevel: stability === "critical" ? "high" : "low",
     });
-
-    wowAutohealEngine.heal(tenantId, { type: "anomaly" });
-    wowStabilityEngine.stabilize(tenantId);
-    wowPredictiveEngine.predict(tenantId, { type: "predict" });
-
-  }, [tenantId]);
+  }, [tenant]);
 
   return (
     <WOWStateContext.Provider value={state}>

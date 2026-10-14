@@ -1,6 +1,6 @@
-import { StatWidget } from "@/components/dashboard/widgets/StatWidget";
-import { SimpleLineChart } from "@/components/dashboard/charts/SimpleLineChart";
-import { HeatmapPlaceholder } from "@/components/dashboard/charts/HeatmapPlaceholder";
+import { StatWidget } from "@/components/blayzit/StatWidget";
+import { SimpleLineChart } from "@/components/blayzit/SimpleLineChart";
+import { HeatmapPlaceholder } from "@/components/blayzit/HeatmapPlaceholder";
 
 export default function DashboardPage() {
   return (

@@ -1,47 +1,34 @@
-// app/blayzit/page.tsx
-import DashboardGrid from "@/components/core/DashboardGrid";
+"use client";
+
 import DashboardPageHeader from "@/components/core/DashboardPageHeader";
 import DashboardSection from "@/components/core/DashboardSection";
+import DashboardGrid from "@/components/core/DashboardGrid";
 
-import OverviewCard from "@/components/dashboard/OverviewCard";
-import StatWidget from "@/components/dashboard/widgets/StatWidget";
-
-// IMPORTS CORREGIDOS (named exports)
-import { SimpleLineChart } from "@/components/dashboard/charts/SimpleLineChart";
-import { HeatmapPlaceholder } from "@/components/dashboard/charts/HeatmapPlaceholder";
+import OverviewCard from "@/components/blayzit/OverviewCard";
+import StatWidget from "@/components/blayzit/StatWidget";
+import { SimpleLineChart } from "@/components/blayzit/SimpleLineChart";
+import { HeatmapPlaceholder } from "@/components/blayzit/HeatmapPlaceholder";
 
 export default function BlayzitHome() {
   return (
-    <>
-      <DashboardPageHeader
-        title="BLAYZIT Enterprise"
-        subtitle="Visión general operativa y de inteligencia."
-      />
+    <div className="space-y-10 p-6">
+      <DashboardPageHeader title="BLAYZIT — Decision Intelligence Engine" />
 
-      <DashboardSection>
+      <DashboardSection title="Overview">
         <DashboardGrid>
           <OverviewCard />
-          <StatWidget
-            title="Decisiones hoy"
-            value="128"
-            subtitle="Procesadas por BLAYZIT"
-            trend="up"
-          />
-          <StatWidget
-            title="Alertas activas"
-            value="7"
-            subtitle="Requieren atención"
-            trend="neutral"
-          />
+          <StatWidget label="Procesos Activos" value="128" trend="+12%" />
+          <StatWidget label="Riesgo Global" value="Bajo" trend="-4%" />
+          <StatWidget label="Latencia Promedio" value="84ms" trend="-8%" />
         </DashboardGrid>
       </DashboardSection>
 
-      <DashboardSection>
+      <DashboardSection title="Tendencias">
         <DashboardGrid>
           <SimpleLineChart />
           <HeatmapPlaceholder />
         </DashboardGrid>
       </DashboardSection>
-    </>
+    </div>
   );
 }

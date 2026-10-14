@@ -1,6 +1,6 @@
-import { StatWidget } from "@/components/dashboard/widgets/StatWidget";
-import { HeatmapPlaceholder } from "@/components/dashboard/charts/HeatmapPlaceholder";
-import { MetricsPanel } from "@/components/dashboard/metrics/MetricsPanel";
+import { StatWidget } from "@/components/blayzit/StatWidget";
+import { HeatmapPlaceholder } from "@/components/blayzit/HeatmapPlaceholder";
+import { MetricsPanel } from "@/components/tech/metrics/MetricsPanel";
 
 export default function AlertasPage() {
   return (

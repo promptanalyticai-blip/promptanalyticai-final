@@ -1,30 +1,23 @@
-//components/dashboard/DashboardShell.tsx
 "use client";
 
 import { ReactNode } from "react";
-import DashboardSidebar from "@/components/DashboardSidebar";
-import DashboardTopbar from "@/components/DashboardTopbar";
-import { ThemeProvider } from "@/app/providers/ThemeProvider";
-import { UserProvider } from "@/components/providers/UserProvider";
+
+import DashboardSidebar from "@/components/core/DashboardSidebar";
+import DashboardTopbar from "@/components/core/DashboardTopbar";
+
+import { ThemeProvider } from "@/app/core/providers/ThemeProvider";
+import { UserProvider } from "@/core/providers/UserProvider";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
       <UserProvider>
-        <div className="flex h-screen bg-gray-50">
-          {/* SIDEBAR ENTERPRISE */}
+        <div className="flex h-screen bg-slate-950 text-slate-200">
           <DashboardSidebar />
 
-          {/* CONTENEDOR PRINCIPAL */}
           <div className="flex flex-col flex-1 overflow-hidden">
-
-            {/* TOPBAR ENTERPRISE */}
             <DashboardTopbar />
-
-            {/* CONTENIDO */}
-            <main className="flex-1 overflow-y-auto p-6">
-              {children}
-            </main>
+            <main className="flex-1 overflow-y-auto p-6">{children}</main>
           </div>
         </div>
       </UserProvider>

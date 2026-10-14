@@ -1,5 +1,5 @@
-import { SimpleLineChart } from "@/components/dashboard/charts/SimpleLineChart";
-import { MetricsPanel } from "@/components/dashboard/metrics/MetricsPanel";
+import { SimpleLineChart } from "@/components/blayzit/SimpleLineChart";
+import { MetricsPanel } from "@/components/tech/metrics/MetricsPanel";
 
 export default function AnaliticaPage() {
   return (

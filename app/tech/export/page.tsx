@@ -1,5 +1,5 @@
 import DashboardShell from "@/components/tech/DashboardShell";
-import ExportUniversal from "@/components/dashboard/export/ExportUniversal";
+import ExportUniversal from "@/components/tech/export/ExportUniversal";
 
 export default function ExportPage() {
   return (

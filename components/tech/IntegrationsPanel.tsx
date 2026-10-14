@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@/components/providers/UserProvider";
+import { useUser } from "@/core/providers/UserProvider";
 
 export function IntegrationsPanel() {
   const user = useUser();
