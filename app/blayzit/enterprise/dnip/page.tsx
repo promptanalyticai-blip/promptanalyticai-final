@@ -1,4 +1,5 @@
-// app/blayzit/enterprise/dnip/page.tsx
+"use client";
+
 import DNIPPanel from "@/components/dnip/DNIPPanel";
 
 export default function BlayzitDNIPIngest() {

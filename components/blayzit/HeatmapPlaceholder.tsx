@@ -1,16 +1,48 @@
-//components/dashboard/charts/HeatmapPlaceholder.tsx
 "use client";
+
+import { Grid3x3 } from "lucide-react";
 
 export function HeatmapPlaceholder() {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-      <h2 className="text-lg font-semibold mb-2">Heatmap de decisiones</h2>
-      <p className="text-slate-500 text-sm mb-4">Distribución por hora/día.</p>
-      <div className="h-40 bg-slate-100 rounded-lg grid grid-cols-8 grid-rows-4 gap-1 p-2">
-        {Array.from({ length: 32 }).map((_, i) => (
-          <div key={i} className="rounded bg-blue-100" />
-        ))}
+    <div className="
+      bg-white 
+      rounded-xl 
+      shadow-lg 
+      border border-slate-200 
+      p-7 
+      flex flex-col 
+      gap-5
+    ">
+      
+      {/* Icono */}
+      <div className="
+        w-12 h-12 
+        rounded-lg 
+        bg-[#F0F8FF] 
+        flex items-center justify-center
+        border border-slate-200
+      ">
+        <Grid3x3 className="w-6 h-6 text-[#1F7FCC]" strokeWidth={1.8} />
+      </div>
+
+      {/* Título */}
+      <h3 className="text-lg font-semibold text-slate-800">
+        Heatmap de decisiones
+      </h3>
+
+      {/* Placeholder */}
+      <div className="
+        h-48 
+        bg-slate-50 
+        border border-slate-200 
+        rounded-lg 
+        flex items-center justify-center 
+        text-slate-400
+      ">
+        [Heatmap Placeholder]
       </div>
     </div>
   );
 }
+
+export default HeatmapPlaceholder;
