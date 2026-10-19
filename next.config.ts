@@ -1,17 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ignorar errores de TypeScript en producción
+  // Evita que Vercel rompa el build por módulos incompletos
   typescript: {
     ignoreBuildErrors: true,
   },
 
-  // Eliminar claves obsoletas
-  // Next.js 16 ya no permite eslint ni experimental.serverActions aquí
-
-  // Configuración estable para Vercel + Turbopack
+  // Configuración estable para Next.js 16 + Turbopack
   reactStrictMode: true,
-
-  // Puedes agregar aquí otras configuraciones válidas si las necesitas
 };
 
 module.exports = nextConfig;
