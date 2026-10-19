@@ -1,15 +1,11 @@
-"use client";
-
-import Papa from "papaparse";
-
 export async function csvProcessor(file: File) {
-  const text = await file.text();
-  const parsed = Papa.parse(text, { header: true });
+  const formData = new FormData();
+  formData.append("file", file);
 
-  return {
-    name: file.name,
-    type: file.type,
-    size: file.size,
-    content: parsed.data,
-  };
+  const res = await fetch("/api/blayzit/analizar/csv", {
+    method: "POST",
+    body: formData,
+  });
+
+  return await res.json();
 }

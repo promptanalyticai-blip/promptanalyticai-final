@@ -1,15 +1,11 @@
-"use client";
-
-import { readDocx } from "docx-parser";
-
 export async function docxProcessor(file: File) {
-  const arrayBuffer = await file.arrayBuffer();
-  const text = await readDocx(arrayBuffer);
+  const formData = new FormData();
+  formData.append("file", file);
 
-  return {
-    name: file.name,
-    type: file.type,
-    size: file.size,
-    content: text,
-  };
+  const res = await fetch("/api/blayzit/analizar/docx", {
+    method: "POST",
+    body: formData,
+  });
+
+  return await res.json();
 }
