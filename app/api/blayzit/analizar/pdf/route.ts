@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -11,7 +14,7 @@ export async function POST(req: Request) {
 
   const arrayBuffer = await file.arrayBuffer();
 
-  const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let text = "";
 
   for (let i = 1; i <= pdf.numPages; i++) {
