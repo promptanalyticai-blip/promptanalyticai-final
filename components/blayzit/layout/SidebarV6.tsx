@@ -2,25 +2,42 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Home, Upload, Brain, Shield, Activity, FileSearch, LayoutDashboard } from "lucide-react";
+import { usePathname } from "next/navigation";
+import {
+  Home,
+  Upload,
+  FileSearch,
+  Brain,
+  Activity,
+  Shield,
+  Gauge,
+  LayoutDashboard,
+} from "lucide-react";
 
 export default function SidebarV6() {
+  const pathname = usePathname();
+
+  const current =
+    pathname?.split("/").pop()?.toUpperCase() || "BLAYZIT";
+
   return (
-    <aside className="w-64 bg-white shadow-lg border-r border-slate-200 flex flex-col p-6">
+    <aside className="w-64 bg-white border-r border-slate-200 shadow-md flex flex-col p-6">
       
-      {/* LOGO */}
+      {/* LOGO + SECCIÓN ACTUAL */}
       <div className="flex items-center gap-3 mb-8">
         <Image
           src="/blayzit-logo.png"
-          alt="BLAYZIT V6 Logo"
-          width={40}
-          height={40}
+          alt="BLAYZIT Logo"
+          width={42}
+          height={42}
           className="rounded-md"
         />
-        <h1 className="text-xl font-bold text-slate-800">BLAYZIT V6</h1>
+        <h1 className="text-xl font-bold text-slate-800 tracking-tight">
+          {current}
+        </h1>
       </div>
 
-      {/* MENU */}
+      {/* MENÚ */}
       <nav className="flex flex-col gap-4 text-slate-700">
         <Link href="/blayzit/v6" className="flex items-center gap-3 hover:text-blue-600">
           <Home size={18} /> Home V6
@@ -55,7 +72,7 @@ export default function SidebarV6() {
         </Link>
 
         <Link href="/blayzit/v6/telemetry" className="flex items-center gap-3 hover:text-blue-600">
-          <LayoutDashboard size={18} /> Telemetría V6
+          <Gauge size={18} /> Telemetría V6
         </Link>
 
         <Link href="/blayzit/v6/panel" className="flex items-center gap-3 hover:text-blue-600">
