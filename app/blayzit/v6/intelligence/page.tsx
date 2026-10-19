@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { telemetryEngine } from "@/components/blayzit/telemetry/TelemetryEngine";
 import TelemetryChart from "@/components/blayzit/telemetry/TelemetryChart";
+
 import { runBlayzitIntelligence } from "@/components/blayzit/BlayzitIntelligence";
+import { dnipClient } from "@/components/blayzit/dnip/dnipClient";
+import { adipClient } from "@/components/blayzit/adip/adipClient";
 
 export default function IntelligenceV6() {
   const [analysis, setAnalysis] = useState<any>(null);
@@ -15,8 +18,22 @@ export default function IntelligenceV6() {
       setLoading(true);
 
       const measured = telemetryEngine.measure("V6Intelligence", async () => {
-        // Versión V6: análisis global del sistema
-        return await runBlayzitIntelligence("BLAYZIT V6 · Estado global del sistema");
+        const text = "BLAYZIT V6 · Estado global del sistema";
+
+        // 1. Inteligencia general
+        const intelligence = await runBlayzitIntelligence(text);
+
+        // 2. Señales DNIP
+        const dnip = await dnipClient(text);
+
+        // 3. Decisiones ADIP basadas en DNIP
+        const adip = await adipClient(dnip.signals || []);
+
+        return {
+          intelligence,
+          dnip,
+          adip,
+        };
       });
 
       const result = await measured;
@@ -42,20 +59,45 @@ export default function IntelligenceV6() {
       )}
 
       {analysis && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Insights globales (DNIP + ADIP)
-          </h2>
-          <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
-            {JSON.stringify(analysis, null, 2)}
-          </pre>
+        <div className="space-y-6">
+
+          {/* Inteligencia general */}
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Inteligencia Global (WOW + IA)
+            </h2>
+            <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
+              {JSON.stringify(analysis.intelligence, null, 2)}
+            </pre>
+          </div>
+
+          {/* DNIP */}
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Señales DNIP (Detección de Riesgos)
+            </h2>
+            <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
+              {JSON.stringify(analysis.dnip, null, 2)}
+            </pre>
+          </div>
+
+          {/* ADIP */}
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Decisiones ADIP (Acción Inteligente)
+            </h2>
+            <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
+              {JSON.stringify(analysis.adip, null, 2)}
+            </pre>
+          </div>
         </div>
       )}
 
+      {/* Telemetría */}
       {metrics.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-slate-800">
-            Telemetría de inteligencia V6
+            Telemetría de Inteligencia V6
           </h2>
 
           <TelemetryChart metrics={metrics} />

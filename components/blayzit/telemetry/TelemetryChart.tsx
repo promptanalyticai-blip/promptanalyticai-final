@@ -1,55 +1,79 @@
 "use client";
 
-import type { TelemetryPoint } from "./TelemetryEngine";
+export default function TelemetryChart({ metrics }) {
+  // Fallback seguro
+  if (!Array.isArray(metrics) || metrics.length === 0) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+        <p className="text-sm text-slate-600">
+          No hay métricas registradas todavía. Ejecuta un análisis para generar telemetría.
+        </p>
 
-type Props = {
-  label: string;
-  field: "latency" | "load" | "risk";
-  points: TelemetryPoint[];
-  unit: string;
-};
-
-export default function TelemetryChart({ label, field, points, unit }: Props) {
-  const maxValue =
-    field === "latency" ? 200 :
-    field === "load" ? 100 :
-    100;
+        {/* Skeleton estilo Stripe */}
+        <div className="mt-4 space-y-3">
+          <div className="h-2 bg-slate-200 rounded animate-pulse"></div>
+          <div className="h-2 bg-slate-200 rounded animate-pulse w-2/3"></div>
+          <div className="h-2 bg-slate-200 rounded animate-pulse w-1/2"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-sm font-semibold text-slate-900">{label}</p>
-        {points.length > 0 && (
-          <p className="text-xs text-slate-500">
-            Último: {points[points.length - 1][field]}{unit}
-          </p>
-        )}
-      </div>
+    <div className="space-y-6">
+      {metrics.map((metric, index) => {
+        const { label, points, field, unit } = metric;
 
-      <div className="h-20 flex items-end gap-[2px]">
-        {points.map((p, i) => {
-          const value = p[field];
-          const height = Math.max(8, (value / maxValue) * 80); // px
+        const safePoints = Array.isArray(points) ? points : [];
+        const lastValue = safePoints.length > 0 ? safePoints[safePoints.length - 1][field] : 0;
 
-          return (
-            <div
-              key={i}
-              className="
-                w-full 
-                bg-sky-400/70 
-                rounded-t 
-                transition-all 
-                duration-300
-              "
-              style={{ height }}
-            />
-          );
-        })}
-      </div>
+        return (
+          <div
+            key={index}
+            className="bg-white p-4 rounded-xl shadow-sm border border-slate-100"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-semibold text-slate-900">{label}</p>
 
-      <p className="mt-2 text-[11px] text-slate-400">
-        Actualizado cada 3 segundos · {points.length} muestras
-      </p>
+              {safePoints.length > 0 ? (
+                <p className="text-xs text-slate-500">
+                  Último: {lastValue}
+                  {unit}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-400">Sin datos</p>
+              )}
+            </div>
+
+            {/* Barra de progreso */}
+            <div className="h-2 bg-slate-200 rounded overflow-hidden">
+              <div
+                className="h-full bg-blue-600 rounded transition-all duration-300"
+                style={{
+                  width: `${Math.min(lastValue * 2, 100)}%`,
+                }}
+              ></div>
+            </div>
+
+            {/* Mini gráfico de puntos */}
+            <div className="mt-4 flex gap-1">
+              {safePoints.length > 0 ? (
+                safePoints.map((p, i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-2 rounded-full bg-blue-500 opacity-70"
+                    style={{
+                      transform: `translateY(${Math.max(0, 20 - p[field])}px)`,
+                    }}
+                  ></div>
+                ))
+              ) : (
+                <div className="text-xs text-slate-400">Sin puntos</div>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
