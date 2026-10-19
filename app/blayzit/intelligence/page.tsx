@@ -1,119 +1,72 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { runBlayzitIntelligence } from "@/components/blayzit/BlayzitIntelligence";
-import { useTelemetryStream } from "@/components/blayzit/telemetry/TelemetryEngine";
+import { telemetryEngine } from "@/components/blayzit/telemetry/TelemetryEngine";
 import TelemetryChart from "@/components/blayzit/telemetry/TelemetryChart";
 
 export default function IntelligenceCenter() {
-  const { decisions, actions } = runBlayzitIntelligence();
-  const points = useTelemetryStream();
+  const [analysis, setAnalysis] = useState<any>(null);
+  const [metrics, setMetrics] = useState<any[]>([]);
 
-  const riskDecision = decisions.find((d) => d.type === "riesgo");
-  const systemStatus =
-    riskDecision?.level === "crítico"
-      ? "crítico"
-      : riskDecision?.level === "alto"
-      ? "alto"
-      : "estable";
+  useEffect(() => {
+    async function load() {
+      // Ejecuta el análisis principal
+      const mainAnalysis = telemetryEngine.measure(
+        "BlayzitIntelligence",
+        () => runBlayzitIntelligence()
+      );
+
+      setAnalysis(mainAnalysis);
+
+      // Obtiene métricas del motor de telemetría
+      const collectedMetrics = telemetryEngine.getMetrics();
+      setMetrics(collectedMetrics);
+    }
+
+    load();
+  }, []);
+
+  if (!analysis) {
+    return (
+      <section className="space-y-6">
+        <h1 className="text-xl font-semibold text-slate-900">
+          BLAYZIT · Inteligencia Operativa
+        </h1>
+        <p className="text-sm text-slate-600">
+          Cargando análisis inteligente del sistema…
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-8">
-      <h1 className="text-2xl font-semibold text-slate-900">
-        BLAYZIT Intelligence Center
+      <h1 className="text-2xl font-bold text-slate-900">
+        Centro de Inteligencia BLAYZIT
       </h1>
 
-      {/* Estado del sistema */}
-      <div
-        className={`
-          p-6 rounded-xl border shadow-sm
-          ${
-            systemStatus === "crítico"
-              ? "bg-red-50 border-red-200"
-              : systemStatus === "alto"
-              ? "bg-yellow-50 border-yellow-200"
-              : "bg-green-50 border-green-200"
-          }
-        `}
-      >
-        <p className="text-lg font-semibold">
-          Estado del sistema:{" "}
-          {systemStatus === "estable"
-            ? "Estable"
-            : systemStatus === "alto"
-            ? "Riesgo Alto"
-            : "Riesgo Crítico"}
-        </p>
-        {riskDecision && (
-          <p className="text-sm text-slate-700 mt-2">{riskDecision.message}</p>
-        )}
+      {/* Panel principal */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-slate-800">
+          Resultado del análisis
+        </h2>
+        <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
+          {JSON.stringify(analysis, null, 2)}
+        </pre>
       </div>
 
       {/* Telemetría */}
-      <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
-          Telemetría en tiempo real
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-slate-800">
+          Telemetría del sistema
         </h2>
-        <div className="grid grid-cols-3 gap-4">
-          <TelemetryChart
-            label="Latencia (ms)"
-            field="latency"
-            points={points}
-            unit="ms"
-          />
-          <TelemetryChart
-            label="Carga (%)"
-            field="load"
-            points={points}
-            unit="%"
-          />
-          <TelemetryChart
-            label="Riesgo (%)"
-            field="risk"
-            points={points}
-            unit="%"
-          />
-        </div>
-      </div>
 
-      {/* Decisiones DNIP */}
-      <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
-          Decisiones DNIP
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {decisions.map((d) => (
-            <div
-              key={d.id}
-              className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm"
-            >
-              <p className="text-sm font-semibold text-slate-900">
-                {d.type.toUpperCase()}
-              </p>
-              <p className="text-sm text-slate-700">{d.message}</p>
-              <p className="text-xs text-slate-500 mt-2">{d.timestamp}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+        <TelemetryChart metrics={metrics} />
 
-      {/* Acciones ADIP */}
-      <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
-          Acciones ADIP
-        </h2>
-        <div className="flex flex-col gap-4">
-          {actions.map((a) => (
-            <div
-              key={a.id}
-              className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm"
-            >
-              <p className="text-sm font-semibold text-slate-900">
-                {a.action}
-              </p>
-              <p className="text-xs text-slate-500 mt-2">{a.timestamp}</p>
-            </div>
-          ))}
-        </div>
+        <pre className="bg-white p-4 rounded-lg shadow text-sm overflow-auto">
+          {JSON.stringify(metrics, null, 2)}
+        </pre>
       </div>
     </section>
   );
