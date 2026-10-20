@@ -1,5 +1,5 @@
-export function classify(content: string) {
-  if (content.length > 500) return "extenso";
-  if (content.includes("error")) return "riesgo";
-  return "normal";
+import { BlayzitIntelligenceBridge } from "@blayzit/intelligence/BlayzitIntelligenceBridge";
+
+export default async function classifyV6(text: string) {
+  return BlayzitIntelligenceBridge().classify(text);
 }

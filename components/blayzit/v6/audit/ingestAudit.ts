@@ -1,11 +1,24 @@
-// components/blayzit/v6/audit/ingestAudit.ts
-import { auditEngine } from "./auditEngine";
+import ThreatEngineV6 from "@blayzit/v6/security/threatEngine";
+import AnomalyEngineV6 from "@blayzit/v6/security/anomalyEngine";
 
-export function logIngest(event: {
-  type: "text" | "file" | "log" | "pdf" | "image";
-  source: "manual" | "upload";
-  filename?: string;
-  sizeBytes?: number;
-}) {
-  auditEngine.log("ingest", event);
+export default function IngestAuditV6(data: any) {
+  const threat = ThreatEngineV6(data);
+  const anomaly = AnomalyEngineV6(data);
+
+  return {
+    auditTimestamp: new Date().toISOString(),
+    auditType: "ingest",
+    threat,
+    anomaly,
+    status:
+      threat.status === "high-risk" || anomaly.status === "critical"
+        ? "requires-review"
+        : "stable",
+    notes:
+      threat.status === "high-risk"
+        ? "High-risk ingestion detected. Review required."
+        : anomaly.status === "critical"
+        ? "Critical anomaly detected. Review recommended."
+        : "Ingestion pipeline stable.",
+  };
 }

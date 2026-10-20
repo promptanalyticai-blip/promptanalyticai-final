@@ -1,3 +1,5 @@
-export function ruleEngine(content: string) {
-  return content.includes("admin") ? "privilegio" : "normal";
+import ADIPDefaultTriggers from "@blayzit/adip/ADIPDefaultTriggers";
+
+export default function ruleEngineV6(data: any) {
+  return ADIPDefaultTriggers.process(data);
 }

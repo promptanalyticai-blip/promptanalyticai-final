@@ -1,13 +1,20 @@
-export async function measureMetric(module: string, fn: () => Promise<any>) {
-  const start = performance.now();
-  const result = await fn(); // ✔ async soportado
-  const end = performance.now();
+import { TelemetryEngine } from "@blayzit/telemetry/TelemetryEngine";
+
+export default function MetricsEngineV6(data: any) {
+  const telemetry = TelemetryEngine(data);
 
   return {
-    id: crypto.randomUUID(),
-    module,
-    durationMs: Number((end - start).toFixed(2)),
-    timestamp: new Date().toLocaleTimeString(),
-    result,
+    ...telemetry,
+    metricsSummary: {
+      totalEvents: telemetry.events ?? 0,
+      avgSignal: telemetry.signalDeviation ?? 0,
+      stability:
+        telemetry.signalDeviation > 0.7
+          ? "unstable"
+          : telemetry.signalDeviation > 0.4
+          ? "warning"
+          : "stable",
+    },
+    timestamp: new Date().toISOString(),
   };
 }

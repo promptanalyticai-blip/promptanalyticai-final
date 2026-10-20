@@ -1,8 +1,11 @@
-export function detectPatterns(content: string) {
-  const patterns = [];
+import { DNIPPatternEngine as BasePatternEngine } from "@blayzit/dnip/DNIPPatternEngine";
 
-  if (content.includes("TODO")) patterns.push("pendiente");
-  if (content.includes("fix")) patterns.push("corrección");
+export default function PatternEngineV6(data: any) {
+  const result = BasePatternEngine(data);
 
-  return patterns;
+  return {
+    ...result,
+    confidence: result.patterns.length > 0 ? 0.92 : 0.35,
+    summary: `Detected ${result.patterns.length} behavioral patterns.`,
+  };
 }
