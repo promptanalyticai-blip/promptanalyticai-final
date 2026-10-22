@@ -1,8 +1,17 @@
-import { runDNIPHybrid as BaseHybridEngine } from "@blayzit/dnip/DNIPHybridEngine";
-
-export default function HybridEngineV6(data: any) {
+export default function RiskEngineV6(data: any) {
   const signals = data.signals || [];
-  const hybridFactor = data.hybridFactor || 0.2;
 
-  return BaseHybridEngine(signals, hybridFactor);
+  const avg =
+    signals.length > 0
+      ? signals.reduce((a, b) => a + b, 0) / signals.length
+      : 0;
+
+  const riskLevel = avg; // riesgo base simple
+  const riskScore = riskLevel * 100;
+
+  return {
+    avg,
+    riskLevel,
+    riskScore
+  };
 }

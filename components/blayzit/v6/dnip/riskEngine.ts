@@ -1,11 +1,17 @@
-import { runDNIP } from "@blayzit/dnip/DNIPEngine";
-
 export default function RiskEngineV6(data: any) {
   const signals = data.signals || [];
-  const base = runDNIP(signals);
+
+  const avg =
+    signals.length > 0
+      ? signals.reduce((a, b) => a + b, 0) / signals.length
+      : 0;
+
+  const riskLevel = avg; // riesgo base simple
+  const riskScore = riskLevel * 100;
 
   return {
-    ...base,
-    riskScore: base.riskLevel * 100,
+    avg,
+    riskLevel,
+    riskScore
   };
 }
