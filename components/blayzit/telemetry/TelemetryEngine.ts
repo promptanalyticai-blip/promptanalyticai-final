@@ -1,37 +1,43 @@
-"use client";
-
-export type TelemetryMetric = {
+type TelemetryRecord = {
   id: string;
-  module: string;
+  label: string;
   durationMs: number;
   timestamp: string;
 };
 
-export class TelemetryEngine {
-  private metrics: TelemetryMetric[] = [];
+class TelemetryEngineClass {
+  private records: TelemetryRecord[] = [];
 
-  measure(module: string, fn: () => any) {
+  measure<T>(label: string, fn: () => T): T {
     const start = performance.now();
     const result = fn();
     const end = performance.now();
 
-    this.metrics.push({
+    this.records.push({
       id: crypto.randomUUID(),
-      module,
+      label,
       durationMs: Number((end - start).toFixed(2)),
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: new Date().toISOString(),
     });
 
     return result;
   }
 
   getMetrics() {
-    return this.metrics;
-  }
-
-  clear() {
-    this.metrics = [];
+    return {
+      general: {
+        totalMeasurements: this.records.length,
+        lastMeasurement: this.records.at(-1)?.timestamp ?? null,
+        version: "V6",
+      },
+      latency: this.records.map((r) => ({
+        label: r.label,
+        durationMs: r.durationMs,
+        timestamp: r.timestamp,
+      })),
+    };
   }
 }
 
-export const telemetryEngine = new TelemetryEngine();
+export const telemetryEngine = new TelemetryEngineClass();
+export { TelemetryEngineClass as TelemetryEngine };

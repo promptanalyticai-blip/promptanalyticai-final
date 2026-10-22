@@ -1,23 +1,130 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Fuente Geist (Nova preset) */
-:root {
-  --font-sans: var(--geist-font);
+/* ULTRA PRIME V6 — BLAYZIT AUTH LOGIN */
+
+.auth-wrapper {
+  background: #F7FAFC;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ShadCN base */
-html {
-  font-family: var(--font-sans);
+.login-card {
+  background: white;
+  width: 380px;        /* antes 320 → ahora más cómodo */
+  padding: 40px;       /* antes 28 → ahora más aire */
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease-out;
+  text-align: center;
 }
 
-/* Elimina cualquier color-scheme forzado */
-html,
-body {
-  margin: 0;
-  padding: 0;
+.login-logo {
+  width: 350px;
+  margin: 0 auto 35px;
+  animation: floatIn 0.5s ease-out;
 }
 
-/* NO forzar tema oscuro o claro */
+.login-input {
+  padding: 14px;
+  border: 1px solid #CBD5E0;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
 
-/* Animaciones: NO globales, solo por clase */
-/* Usa Tailwind: transition, duration-200, ease-in-out */
+.login-input:focus {
+  border-color: #2B6CB0;
+  box-shadow: 0 0 0 3px rgba(43,108,176,0.2);
+  outline: none;
+}
+
+.login-button {
+  background: #2B6CB0;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background: #1E4E7A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(43,108,176,0.3);
+}
+
+.login-links {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-link {
+  font-size: 14px;
+  color: #2B6CB0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: #1E4E7A;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* separación perfecta entre inputs */
+}
+
+/* BLAYZIT V6 — Layout principal */
+
+.blayzit-wrapper {
+  min-height: 100vh;
+  background: #F7FAFC;
+  padding: 40px;
+}
+
+/* BLAYZIT V6 — Pantalla inicial */
+
+.blayzit-home {
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.blayzit-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.blayzit-subtitle {
+  font-size: 18px;
+  color: #4A5568;
+}
+
+.login-error {
+  color: #e53e3e;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

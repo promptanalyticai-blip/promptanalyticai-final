@@ -1,14 +1,8 @@
-import { DNIPHybridEngine as BaseHybridEngine } from "@blayzit/dnip/DNIPHybridEngine";
-import PatternEngineV6 from "@blayzit/v6/dnip/patternEngine";
+import { runDNIPHybrid as BaseHybridEngine } from "@blayzit/dnip/DNIPHybridEngine";
 
 export default function HybridEngineV6(data: any) {
-  const hybrid = BaseHybridEngine(data);
-  const patterns = PatternEngineV6(data);
+  const signals = data.signals || [];
+  const hybridFactor = data.hybridFactor || 0.2;
 
-  return {
-    hybrid,
-    patterns,
-    combinedScore: (hybrid.score + patterns.confidence) / 2,
-    status: hybrid.score > 0.75 ? "optimized" : "learning",
-  };
+  return BaseHybridEngine(signals, hybridFactor);
 }

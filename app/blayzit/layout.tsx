@@ -1,16 +1,14 @@
-// app/blayzit/layout.tsx
-import "@/app/globals.css";
+import "../globals.css";
+import "../styles/blayzit-enterprise.css";
+import { ThemeProvider } from "../providers/ThemeProvider";
+import { UserProvider } from "../providers/UserProvider";
 
-export default function BlayzitLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function BlayzitLayout({ children }) {
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-slate-900">
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <ThemeProvider>
+      <UserProvider>
         {children}
-      </div>
-    </div>
+      </UserProvider>
+    </ThemeProvider>
   );
 }

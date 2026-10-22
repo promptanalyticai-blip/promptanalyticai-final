@@ -15,7 +15,7 @@ function LoadingButton({ onClick, loading, disabled, children }: LoadingButtonPr
   return (
     <button
       onClick={onClick}
-      disabled={disabled || loading}
+      disabled={Boolean(disabled || loading)}
       className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 text-white py-3 rounded-lg transition"
     >
       {loading ? "Cargando..." : children}
@@ -37,7 +37,7 @@ export default function LoginCard() {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, pass }),
+        body: JSON.stringify({ email, password: pass }),
       });
 
       const data = await res.json();
@@ -50,7 +50,6 @@ export default function LoginCard() {
 
       saveSession(data);
 
-      // Redirigir según estado de la sesión
       if (!data.company) {
         window.location.href = "/register/company";
         return;

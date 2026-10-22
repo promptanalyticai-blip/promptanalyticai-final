@@ -1,7 +1,12 @@
-"use client";
+import { SecurityEngine } from "./SecurityEngine";
 
-import { DNIPDecision } from "@/components/blayzit/dnip/DNIPEngine";
+export function DNIPSecurityBridge(payload: any) {
+  const engine = new SecurityEngine();
+  const status = engine.getSecurityStatus();
 
-export function extractRiskDecisions(decisions: DNIPDecision[]) {
-  return decisions.filter((d) => d.type === "riesgo");
+  return {
+    input: payload,
+    security: status,
+    processedAt: new Date().toISOString(),
+  };
 }

@@ -1,9 +1,7 @@
-"use client";
-
 export default function SubTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-sm text-slate-600">
+    <h3 className="text-lg font-semibold text-gray-800 mb-2">
       {children}
-    </p>
+    </h3>
   );
 }

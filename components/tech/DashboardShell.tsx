@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import DashboardSidebar from "@/components/core/DashboardSidebar";
 import DashboardTopbar from "@/components/core/DashboardTopbar";
 
-import { ThemeProvider } from "@/app/core/providers/ThemeProvider";
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
 import { UserProvider } from "@/core/providers/UserProvider";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {

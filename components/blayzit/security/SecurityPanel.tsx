@@ -1,27 +1,34 @@
 "use client";
 
-export default function SecurityPanel({ signals }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">Seguridad del Sistema</h2>
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
+import SubTitle from "@/components/ui/SubTitle";
+import { ShieldCheck, AlertTriangle } from "lucide-react";
+import { SecurityEngine } from "./SecurityEngine";
 
-      {signals.length === 0 ? (
-        <p className="text-sm text-slate-600">No se detectaron señales de seguridad.</p>
-      ) : (
-        <div className="space-y-3">
-          {signals.map((s) => (
-            <div key={s.id} className="border border-slate-200 rounded-lg p-4 space-y-2">
-              <p className="text-sm font-semibold text-slate-800 uppercase">{s.type}</p>
-              <p className="text-xs text-slate-600">{s.message}</p>
-              <p className="text-xs text-slate-400">{s.timestamp}</p>
-              <p className="text-xs text-slate-500">
-                Severidad:{" "}
-                <span className="font-semibold">{(s.severity * 100).toFixed(0)}%</span>
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+export default function SecurityPanel() {
+  const engine = new SecurityEngine();
+  const status = engine.getSecurityStatus();
+
+  return (
+    <Section title="Seguridad del Sistema">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <SubTitle>
+            <ShieldCheck className="inline-block mr-2 text-green-600" />
+            Estado General
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(status.overview, null, 2)}</pre>
+        </Card>
+
+        <Card>
+          <SubTitle>
+            <AlertTriangle className="inline-block mr-2 text-yellow-600" />
+            Riesgos Detectados
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(status.risks, null, 2)}</pre>
+        </Card>
+      </div>
+    </Section>
   );
 }

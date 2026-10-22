@@ -1,23 +1,35 @@
 "use client";
 
-export default function VersionsPanel({ versions }: { versions: any[] }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">
-        Versiones del archivo
-      </h2>
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
+import SubTitle from "@/components/ui/SubTitle";
+import { Layers } from "lucide-react";
 
-      {versions.length === 0 ? (
-        <p className="text-sm text-slate-600">No hay versiones guardadas.</p>
-      ) : (
-        <ul className="list-disc pl-4 text-sm text-slate-700 space-y-1">
-          {versions.map((v: any) => (
-            <li key={v.name}>
-              {v.name} — {v.created_at}
+export default function VersionsPanel() {
+  const versions = [
+    { version: "1.0.0", date: "2024-01-10" },
+    { version: "1.1.0", date: "2024-03-22" },
+    { version: "2.0.0", date: "2025-07-15" },
+    { version: "2.1.0", date: "2026-02-01" },
+  ];
+
+  return (
+    <Section title="Versiones del Sistema">
+      <Card>
+        <SubTitle>
+          <Layers className="inline-block mr-2 text-indigo-600" />
+          Historial de Versiones
+        </SubTitle>
+
+        <ul className="text-sm space-y-2">
+          {versions.map((v, i) => (
+            <li key={i} className="flex justify-between">
+              <span>{v.version}</span>
+              <span className="text-gray-500">{v.date}</span>
             </li>
           ))}
         </ul>
-      )}
-    </div>
+      </Card>
+    </Section>
   );
 }

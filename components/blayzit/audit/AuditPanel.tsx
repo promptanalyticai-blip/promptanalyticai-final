@@ -1,23 +1,34 @@
 "use client";
 
-export default function AuditPanel({ events }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">Auditoría del Motor</h2>
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
+import SubTitle from "@/components/ui/SubTitle";
+import { FileSearch, ShieldAlert } from "lucide-react";
+import { AuditEngine } from "./AuditEngine";
 
-      {events.length === 0 ? (
-        <p className="text-sm text-slate-600">No hay eventos registrados.</p>
-      ) : (
-        <ul className="space-y-3">
-          {events.map((e) => (
-            <li key={e.id} className="border border-slate-200 rounded-lg p-4 space-y-1">
-              <p className="text-sm font-semibold text-slate-800 uppercase">{e.type}</p>
-              <p className="text-xs text-slate-600">{e.message}</p>
-              <p className="text-xs text-slate-400">{e.timestamp}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+export default function AuditPanel() {
+  const engine = new AuditEngine();
+  const audit = engine.getAuditSummary();
+
+  return (
+    <Section title="Auditoría del Sistema">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <SubTitle>
+            <FileSearch className="inline-block mr-2 text-blue-600" />
+            Resumen
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(audit.summary, null, 2)}</pre>
+        </Card>
+
+        <Card>
+          <SubTitle>
+            <ShieldAlert className="inline-block mr-2 text-red-600" />
+            Alertas
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(audit.alerts, null, 2)}</pre>
+        </Card>
+      </div>
+    </Section>
   );
 }

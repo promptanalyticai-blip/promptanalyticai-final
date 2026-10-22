@@ -1,60 +1,20 @@
 "use client";
 
-export type DNIPDecision = {
-  id: string;
-  type: "riesgo" | "latencia" | "carga" | "anomalía";
-  level: "bajo" | "medio" | "alto" | "crítico";
-  message: string;
-  timestamp: string;
-};
+/**
+ * DNIP Engine base
+ * Procesa señales y devuelve un nivel de riesgo inicial.
+ */
 
-export function runDNIP(signals: any): DNIPDecision[] {
-  const decisions: DNIPDecision[] = [];
-  const now = new Date().toLocaleTimeString();
+export function runDNIP(signals: number[]) {
+  if (!Array.isArray(signals)) return { riskLevel: 0 };
 
-  // Riesgo
-  if (signals.dnip.riskLevel > 0.7) {
-    decisions.push({
-      id: crypto.randomUUID(),
-      type: "riesgo",
-      level: "alto",
-      message: "El nivel de riesgo supera el 70%.",
-      timestamp: now,
-    });
-  }
+  const avg = signals.reduce((a, b) => a + b, 0) / signals.length;
 
-  // Latencia
-  if (signals.dnip.latency > 120) {
-    decisions.push({
-      id: crypto.randomUUID(),
-      type: "latencia",
-      level: "medio",
-      message: "La latencia supera los 120ms.",
-      timestamp: now,
-    });
-  }
+  const riskLevel = Math.min(1, avg);
 
-  // Carga
-  if (signals.dnip.systemLoad > 80) {
-    decisions.push({
-      id: crypto.randomUUID(),
-      type: "carga",
-      level: "alto",
-      message: "La carga del sistema supera el 80%.",
-      timestamp: now,
-    });
-  }
-
-  // Anomalías
-  if (signals.dnip.anomalies) {
-    decisions.push({
-      id: crypto.randomUUID(),
-      type: "anomalía",
-      level: "crítico",
-      message: "Se detectó una anomalía en los datos.",
-      timestamp: now,
-    });
-  }
-
-  return decisions;
+  return {
+    signals,
+    avg,
+    riskLevel,
+  };
 }

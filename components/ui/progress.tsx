@@ -1,13 +1,16 @@
-//components/ui/progress.tsx
-import * as React from "react"
+export default function Progress({
+  value,
+}: {
+  value: number;
+}) {
+  const pct = Math.min(100, Math.max(0, value));
 
-export function Progress({ value = 0 }: { value?: number }) {
   return (
-    <div className="w-full h-2 bg-gray-200 rounded">
+    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
       <div
-        className="h-2 bg-blue-500 rounded"
-        style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+        className="h-full bg-blue-600 transition-all"
+        style={{ width: `${pct}%` }}
       />
     </div>
-  )
+  );
 }

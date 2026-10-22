@@ -1,18 +1,16 @@
-"use client";
-
-import { theme } from "@/lib/theme";
-
-export default function Card({ children }: { children: React.ReactNode }) {
+export function Card({ children, className = "" }) {
   return (
     <div
-      className="border shadow-sm"
-      style={{
-        background: theme.colors.card,
-        borderColor: theme.colors.border,
-        borderRadius: theme.radius.md,
-        padding: theme.spacing.card,
-        boxShadow: theme.shadow.soft,
-      }}
+      className={`
+        bg-white 
+        border border-slate-200 
+        rounded-xl 
+        shadow-sm 
+        hover:shadow-md 
+        transition-shadow 
+        p-4
+        ${className}
+      `}
     >
       {children}
     </div>

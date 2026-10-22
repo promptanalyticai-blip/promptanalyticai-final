@@ -1,9 +1,7 @@
-"use client";
-
 export default function Title({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-lg font-semibold text-slate-900">
+    <h1 className="text-2xl font-bold tracking-tight text-gray-900">
       {children}
-    </h2>
+    </h1>
   );
 }

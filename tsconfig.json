@@ -1,40 +1,46 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    },
-
-    "target": "ESNext",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
-
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
-
+    "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-
     "jsx": "react-jsx",
-    "esModuleInterop": true,
 
-    "plugins": [
-      { "name": "next" }
-    ]
+    "paths": {
+      "@/*": ["./*"],
+
+      "~/*": ["app/*", "components/*"],
+
+      "@components/*": ["components/*"],
+      "@app/*": ["app/*"],
+
+      "@blayzit/*": ["components/blayzit/*"],
+      "@dnip/*": ["components/blayzit/dnip/*"],
+      "@adip/*": ["components/blayzit/adip/*"],
+      "@telemetry/*": ["components/blayzit/telemetry/*"],
+      "@ui/*": ["components/ui/*"],
+      "@wow/*": ["components/wow/*"]
+    },
+
+    "incremental": true,
+    "plugins": [{ "name": "next" }]
   },
-
-  "exclude": ["supabase/functions"],
 
   "include": [
     "next-env.d.ts",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.mts"
-  ]
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+
+  "exclude": ["node_modules"]
 }

@@ -2,18 +2,19 @@
 
 import { runDNIP } from "./DNIPEngine";
 
-export function runDNIPHybrid(signals: any, ai: any) {
+/**
+ * DNIP Hybrid Engine
+ * Combina señales con un factor híbrido para ajustar el riesgo.
+ */
+
+export function runDNIPHybrid(signals: number[], hybridFactor: number = 0.2) {
   const base = runDNIP(signals);
 
-  const hybridDecision = {
-    ...base,
-    aiScore: ai.score,
-    aiSummary: ai.summary,
-    aiInsights: ai.insights,
-    finalRisk:
-      (signals.dnip.riskLevel * 0.7) +
-      (ai.score * 0.3),
-  };
+  const hybridBoost = hybridFactor * base.riskLevel;
 
-  return hybridDecision;
+  return {
+    ...base,
+    hybridBoost,
+    finalRisk: Math.min(1, base.riskLevel + hybridBoost),
+  };
 }

@@ -1,0 +1,100 @@
+/* ULTRA PRIME V6 — BLAYZIT AUTH LOGIN */
+
+/* Fondo corporativo */
+.auth-wrapper {
+  background: #F7FAFC;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Tarjeta premium */
+.login-card {
+  background: white;
+  width: 320px;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease-out;
+  text-align: center;
+}
+
+/* Logo grande y elegante */
+.login-logo {
+  width: 350px;   /* ⭐ tamaño ideal */
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Inputs modernos */
+.login-input {
+  padding: 12px;
+  border: 1px solid #CBD5E0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.login-input:focus {
+  border-color: #2B6CB0;
+  box-shadow: 0 0 0 3px rgba(43,108,176,0.2);
+  outline: none;
+}
+
+/* Botón ULTRA PRIME */
+.login-button {
+  background: #2B6CB0;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 5px;
+}
+
+.login-button:hover {
+  background: #1E4E7A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(43,108,176,0.3);
+}
+
+/* Links */
+.login-links {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-link {
+  font-size: 14px;
+  color: #2B6CB0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: #1E4E7A;
+}
+
+/* Animaciones suaves */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.login-logo img {
+  width: 250px;   /* ⭐ aquí SÍ cambia el tamaño real */
+  height: auto;
+}

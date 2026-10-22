@@ -7,8 +7,8 @@ export default function DashboardLogo() {
       <Image
         src="/blayzit/blayzit-logo.png"
         alt="BLAYZIT Logo"
-        width={140}
-        height={40}
+        width={240}
+        height={80}
         priority
       />
     </div>

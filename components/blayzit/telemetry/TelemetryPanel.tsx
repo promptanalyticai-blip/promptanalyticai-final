@@ -1,23 +1,34 @@
 "use client";
 
-export default function TelemetryPanel({ metrics }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">Telemetría del Sistema</h2>
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
+import SubTitle from "@/components/ui/SubTitle";
+import { Activity, Gauge } from "lucide-react";
+import { TelemetryEngine } from "./TelemetryEngine";
 
-      {metrics.length === 0 ? (
-        <p className="text-sm text-slate-600">No hay métricas registradas.</p>
-      ) : (
-        <div className="space-y-3">
-          {metrics.map((m) => (
-            <div key={m.id} className="border border-slate-200 rounded-lg p-4 space-y-2">
-              <p className="text-sm font-semibold text-slate-800 uppercase">{m.module}</p>
-              <p className="text-xs text-slate-600">Duración: {m.durationMs} ms</p>
-              <p className="text-xs text-slate-400">{m.timestamp}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+export default function TelemetryPanel() {
+  const engine = new TelemetryEngine();
+  const metrics = engine.getMetrics();
+
+  return (
+    <Section title="Telemetría del Sistema">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <SubTitle>
+            <Activity className="inline-block mr-2 text-blue-600" />
+            Métricas Generales
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(metrics.general, null, 2)}</pre>
+        </Card>
+
+        <Card>
+          <SubTitle>
+            <Gauge className="inline-block mr-2 text-purple-600" />
+            Latencia
+          </SubTitle>
+          <pre className="text-sm">{JSON.stringify(metrics.latency, null, 2)}</pre>
+        </Card>
+      </div>
+    </Section>
   );
 }

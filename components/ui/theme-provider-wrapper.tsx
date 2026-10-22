@@ -1,9 +1,11 @@
 "use client";
 
-import { ThemeProvider } from "@/components/ui/theme-provider";
+import BlayzitThemeProvider from "@ui/theme-provider";
 
-export function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
-  return <ThemeProvider>{children}</ThemeProvider>;
+export default function ThemeProviderWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <BlayzitThemeProvider>{children}</BlayzitThemeProvider>;
 }
-
-export default ThemeProviderWrapper;
