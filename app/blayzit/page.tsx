@@ -1,6 +1,6 @@
 "use client";
 
-import PanelDashboard from "./panel/PanelDashboard";
+import PanelDashboard from "./v6/panel/PanelDashboard";
 
 export default function Page() {
   return <PanelDashboard />;

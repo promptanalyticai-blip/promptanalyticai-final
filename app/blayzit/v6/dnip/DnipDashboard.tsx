@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/Badge";
 import { Separator } from "@/components/ui/Separator";
 import { TrendingUp, AlertTriangle, Activity } from "lucide-react";
 
-import PatternEngineV6 from "./patternEngine";
-import HybridEngineV6 from "./hybridEngine";
-import SignalEngineV6 from "./signalEngine";
+import PatternEngineV6 from "@/components/blayzit/v6/dnip/patternEngine";
+import HybridEngineV6 from "@/components/blayzit/v6/dnip/hybridEngine";
+import SignalEngineV6 from "@/components/blayzit/v6/dnip/signalEngine";
+
 
 export default function DnipDashboard() {
   const signals = [0.2, 0.4, 0.8];
