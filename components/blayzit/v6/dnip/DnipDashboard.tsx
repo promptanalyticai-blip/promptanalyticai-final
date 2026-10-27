@@ -1,134 +1,99 @@
 "use client";
 
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Separator } from "@/components/ui/Separator";
-import { TrendingUp, AlertTriangle, Activity } from "lucide-react";
-
-import PatternEngineV6 from "./patternEngine";
-import HybridEngineV6 from "./hybridEngine";
-import SignalEngineV6 from "./signalEngine";
-
 export default function DnipDashboard() {
-  // Datos de prueba (luego conectamos API real)
-  const signals = [0.2, 0.4, 0.8];
-  const patterns = ["Patrón financiero"];
-
-  const signalResult = SignalEngineV6({ signals });
-  const patternResult = PatternEngineV6({ signals, patterns });
-  const hybridResult = HybridEngineV6({ signals, hybridFactor: 0.3 });
-
   return (
-    <div className="space-y-8 p-6 bg-[#F7FAFC] min-h-screen fade-in">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-          BLAYZIT V6 · DNIP
-        </h1>
-        <p className="text-slate-600 mt-1">
-          Motor de análisis inteligente — arquitectura WOW ULTRA PRIME.
-        </p>
+    <div className="min-h-screen bg-slate-50/80">
+      <div className="max-w-6xl mx-auto py-8 space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
+            BLAYZIT V6 · DNIP
+          </h1>
+          <p className="text-sm text-slate-500">
+            Motor de análisis inteligente — arquitectura WOW ULTRA PRIME.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Señales procesadas */}
+          <div className="relative overflow-hidden rounded-2xl border border-sky-200/70 bg-white/70 backdrop-blur-sm shadow-lg shadow-sky-100 transition hover:-translate-y-0.5 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-50/70 via-transparent to-indigo-50/40 opacity-80" />
+            <div className="relative p-5">
+              <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Señales procesadas
+              </h2>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">0.467</p>
+              <p className="mt-2 text-xs text-slate-500">
+                Promedio de intensidad de señales.
+              </p>
+            </div>
+          </div>
+
+          {/* Riesgo base */}
+          <div className="relative overflow-hidden rounded-2xl border border-amber-200/70 bg-white/70 backdrop-blur-sm shadow-lg shadow-amber-100 transition hover:-translate-y-0.5 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-transparent to-orange-50/40 opacity-80" />
+            <div className="relative p-5">
+              <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Riesgo base DNIP
+              </h2>
+              <p className="mt-3 text-4xl font-semibold text-amber-700">
+                46.7%
+              </p>
+              <p className="mt-2 text-xs text-slate-500">
+                Nivel de riesgo antes de aplicar patrones.
+              </p>
+            </div>
+          </div>
+
+          {/* Riesgo final */}
+          <div className="relative overflow-hidden rounded-2xl border border-red-200/70 bg-white/70 backdrop-blur-sm shadow-lg shadow-red-100 transition hover:-translate-y-0.5 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-50/70 via-transparent to-red-50/40 opacity-80" />
+            <div className="relative p-5">
+              <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Riesgo final DNIP
+              </h2>
+              <p className="mt-3 text-4xl font-semibold text-red-700">58.3%</p>
+              <p className="mt-2 text-xs text-slate-500">
+                Riesgo tras aplicar patrones financieros.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Patrones */}
+          <div className="rounded-2xl border border-slate-200/70 bg-white/80 backdrop-blur-sm shadow-md shadow-slate-200">
+            <div className="p-5 space-y-2">
+              <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Patrones detectados
+              </h2>
+              <p className="text-sm font-medium text-slate-900">
+                Patrón financiero
+              </p>
+              <p className="text-xs text-slate-500">
+                Boost por patrones:{" "}
+                <span className="font-semibold text-slate-900">11.7%</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Motor híbrido */}
+          <div className="rounded-2xl border border-slate-200/70 bg-white/80 backdrop-blur-sm shadow-md shadow-slate-200">
+            <div className="p-5 space-y-2">
+              <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                Motor Híbrido DNIP V6
+              </h2>
+              <p className="text-xs text-slate-500">
+                Boost híbrido:{" "}
+                <span className="font-semibold text-slate-900">14.0%</span>
+              </p>
+              <p className="text-xs text-slate-500">
+                Riesgo final híbrido:{" "}
+                <span className="font-semibold text-red-700">60.7%</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <Separator />
-
-      {/* GRID PRINCIPAL */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Panel: Señales */}
-        <Card className="p-5 shadow-sm bg-white">
-          <div className="flex items-center gap-2 mb-3">
-            <Activity className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-slate-800">
-              Señales procesadas
-            </h2>
-          </div>
-
-          <p className="text-sm text-slate-600 mb-2">
-            Promedio:{" "}
-            <strong className="text-slate-800">
-              {signalResult.avg.toFixed(3)}
-            </strong>
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {signalResult.signals.map((s, i) => (
-              <Badge key={i} className="bg-blue-100 text-blue-700">
-                {s}
-              </Badge>
-            ))}
-          </div>
-        </Card>
-
-        {/* Panel: Riesgo Base */}
-        <Card className="p-5 shadow-sm bg-white">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-5 h-5 text-green-600" />
-            <h2 className="text-lg font-semibold text-slate-800">
-              Riesgo Base DNIP
-            </h2>
-          </div>
-
-          <p className="text-sm text-slate-600">
-            Nivel de riesgo:
-            <strong className="text-slate-800 ml-1">
-              {(signalResult.riskLevel * 100).toFixed(1)}%
-            </strong>
-          </p>
-        </Card>
-
-        {/* Panel: Patrones */}
-        <Card className="p-5 shadow-sm bg-white">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600" />
-            <h2 className="text-lg font-semibold text-slate-800">
-              Patrones detectados
-            </h2>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-3">
-            {patterns.map((p, i) => (
-              <Badge key={i} className="bg-yellow-100 text-yellow-700">
-                {p}
-              </Badge>
-            ))}
-          </div>
-
-          <p className="text-sm text-slate-600">
-            Boost por patrones:
-            <strong className="text-slate-800 ml-1">
-              {(patternResult.patternRiskBoost * 100).toFixed(1)}%
-            </strong>
-          </p>
-
-          <p className="text-sm text-slate-600 mt-1">
-            Riesgo final:
-            <strong className="text-slate-800 ml-1">
-              {(patternResult.finalRisk * 100).toFixed(1)}%
-            </strong>
-          </p>
-        </Card>
-      </div>
-
-      {/* PANEL HÍBRIDO */}
-      <Card className="p-6 shadow-sm bg-white">
-        <h2 className="text-xl font-semibold text-slate-800 mb-4">
-          Motor Híbrido DNIP V6
-        </h2>
-
-        <p className="text-sm text-slate-600">
-          Boost híbrido:
-          <strong className="text-slate-800 ml-1">
-            {(hybridResult.hybridBoost * 100).toFixed(1)}%
-          </strong>
-        </p>
-
-        <p className="text-sm text-slate-600 mt-1">
-          Riesgo final híbrido:
-          <strong className="text-slate-800 ml-1">
-            {(hybridResult.finalRisk * 100).toFixed(1)}%
-          </strong>
-        </p>
-      </Card>
     </div>
   );
 }

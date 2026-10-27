@@ -1,17 +1,6 @@
-export function Card({ children, className = "" }) {
+export function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className={`
-        bg-white 
-        border border-slate-200 
-        rounded-xl 
-        shadow-sm 
-        hover:shadow-md 
-        transition-shadow 
-        p-4
-        ${className}
-      `}
-    >
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
       {children}
     </div>
   );

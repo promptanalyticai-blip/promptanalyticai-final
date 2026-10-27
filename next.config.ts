@@ -1,8 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   experimental: {
-    serverActions: true,
+    serverActions: {},
   },
+
+  // 👇 Esto es lo que necesita Turbopack para ApexCharts
+  transpilePackages: ["react-apexcharts"],
 };
 
-module.exports = nextConfig;
+export default nextConfig;
