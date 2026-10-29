@@ -1,178 +1,76 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, Settings, X } from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { User, Settings, LogOut } from "lucide-react";
+import Link from "next/link";
+
+const supabase = createClient();
 
 export default function UsuarioV6() {
-  const [openUserMenu, setOpenUserMenu] = useState(false);
-  const [openConfigPanel, setOpenConfigPanel] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const userState = "online";
-  const userStateLabel = { online: "Disponible", ocupado: "Ocupado", ausente: "Ausente" };
-  const userStateColor = { online: "bg-emerald-500", ocupado: "bg-amber-500", ausente: "bg-slate-400" };
+  useEffect(() => {
+    cargarUsuario();
+  }, []);
 
-  const userActivityPrediction = "Actividad estable durante el día.";
+  async function cargarUsuario() {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+  }
 
   return (
     <div className="relative">
-
-      {/* BOTÓN USUARIO */}
-      <div
-        className="flex items-center gap-3 cursor-pointer group"
-        onClick={() => {
-          setOpenUserMenu(!openUserMenu);
-          setOpenConfigPanel(false);
-        }}
+      {/* BOTÓN */}
+      <button
+        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 transition"
+        onClick={() => setOpen(!open)}
       >
-        <Image
-          src="/blayzit-logo.png"
-          alt="User"
-          width={40}
-          height={40}
-          className="rounded-full border border-slate-200 shadow-sm"
-        />
+        <User className="h-6 w-6 text-slate-600" />
+      </button>
 
-        <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold text-slate-800">Mindy</span>
-          <span className="text-xs text-slate-500">Operaciones</span>
-        </div>
+      {/* PANEL */}
+      {open && (
+        <div className="absolute right-0 top-12 w-64 bg-white border border-slate-200 rounded-xl shadow-xl p-4 z-50 space-y-4">
 
-        <ChevronDown className="h-4 w-4 text-slate-500 group-hover:text-indigo-600 transition" />
-      </div>
-
-      {/* MENÚ DEL USUARIO */}
-      {openUserMenu && (
-        <div className="absolute right-0 top-14 w-64 bg-white border border-slate-200 rounded-xl shadow-xl p-4 z-[60] space-y-4">
-
-          {/* PERFIL */}
-          <div className="flex items-center gap-3">
-            <div className={`h-3 w-3 rounded-full ${userStateColor[userState]}`}></div>
-            <div>
-              <p className="text-sm font-semibold text-slate-800">Mindy</p>
-              <p className="text-xs text-slate-500">{userStateLabel[userState]}</p>
-            </div>
+          {/* INFO */}
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-slate-800">
+              {user?.email || "superadmin"}
+            </span>
+            <span className="text-xs text-slate-500">
+              {user ? "usuario registrado" : "modo desarrollo"}
+            </span>
           </div>
 
-          {/* IA ACTIVIDAD */}
-          <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
-            <p className="text-xs text-slate-500">Actividad del usuario</p>
-            <p className="text-sm text-slate-700">{userActivityPrediction}</p>
-          </div>
+          <div className="border-t border-slate-200 pt-4 space-y-3">
 
-          {/* ACCIONES */}
-          <div className="space-y-1">
-            <a href="/blayzit/v6/perfil" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg">
-              Mi Perfil
-            </a>
-
-            <button
-              onClick={() => {
-                setOpenConfigPanel(true);
-                setOpenUserMenu(false);
-              }}
-              className="w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2"
+            <Link
+              href="/blayzit/v6/perfil"
+              className="flex items-center gap-3 text-sm text-slate-700 hover:text-indigo-600 transition"
             >
-              <Settings className="h-4 w-4 text-slate-500" />
+              <User size={16} />
+              Perfil
+            </Link>
+
+            <Link
+              href="/blayzit/v6/settings"
+              className="flex items-center gap-3 text-sm text-slate-700 hover:text-indigo-600 transition"
+            >
+              <Settings size={16} />
               Configuración
-            </button>
+            </Link>
 
-            <a href="/blayzit/v6/security" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg">
-              Seguridad
-            </a>
-
-            <button className="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-lg">
+            <Link
+              href="/logout"
+              className="flex items-center gap-3 text-sm text-slate-700 hover:text-rose-600 transition"
+            >
+              <LogOut size={16} />
               Cerrar sesión
-            </button>
+            </Link>
+
           </div>
-        </div>
-      )}
-
-      {/* PANEL DE CONFIGURACIÓN */}
-      {openConfigPanel && (
-        <div className="absolute right-0 top-14 w-[420px] bg-white border border-slate-200 rounded-xl shadow-xl p-6 z-[70] space-y-8">
-
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-800">Configuración</h2>
-            <button onClick={() => setOpenConfigPanel(false)} className="text-slate-500 hover:text-rose-600 transition">
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          {/* CUENTA */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-slate-700">Cuenta</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Cambiar contraseña</p>
-                <p className="text-xs text-slate-500 mb-2">Actualizar tu contraseña actual</p>
-                <button className="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm">Cambiar</button>
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Olvidé mi contraseña</p>
-                <p className="text-xs text-slate-500 mb-2">Enviar enlace de recuperación</p>
-                <button className="px-3 py-2 bg-slate-700 text-white rounded-lg text-sm">Enviar enlace</button>
-              </div>
-
-            </div>
-          </div>
-
-          {/* SEGURIDAD */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-slate-700">Seguridad</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Autenticación en dos pasos</p>
-                <p className="text-xs text-slate-500 mb-2">Protección adicional</p>
-                <input type="checkbox" className="h-4 w-4" defaultChecked />
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Cerrar sesiones activas</p>
-                <p className="text-xs text-slate-500 mb-2">Cerrar sesiones en otros dispositivos</p>
-                <button className="px-3 py-2 bg-rose-600 text-white rounded-lg text-sm">Cerrar sesiones</button>
-              </div>
-
-            </div>
-          </div>
-
-          {/* NOTIFICACIONES */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-slate-700">Notificaciones</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Alertas críticas</p>
-                <p className="text-xs text-slate-500 mb-2">Riesgos y actividad inusual</p>
-                <input type="checkbox" className="h-4 w-4" defaultChecked />
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm font-medium text-slate-700">Decisiones sugeridas</p>
-                <p className="text-xs text-slate-500 mb-2">Recomendaciones de IA</p>
-                <input type="checkbox" className="h-4 w-4" defaultChecked />
-              </div>
-
-            </div>
-          </div>
-
-          {/* IA */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-slate-700">Inteligencia</h3>
-
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <p className="text-sm font-medium text-slate-700">Predicción del sistema</p>
-              <p className="text-xs text-slate-500 mb-2">Análisis automático</p>
-              <input type="checkbox" className="h-4 w-4" defaultChecked />
-            </div>
-          </div>
-
         </div>
       )}
     </div>

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import dynamic from "next/dynamic";
+
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
@@ -19,12 +22,6 @@ import { AlertTriangle, Bell, Shield, Brain, Zap } from "lucide-react";
 
 // ApexCharts dinámico
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function AlertsPage() {
   const [riesgos, setRiesgos] = useState([]);

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase CORRECTO
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
@@ -19,12 +22,6 @@ import { Workflow, CheckCircle, XCircle, Brain } from "lucide-react";
 
 // ApexCharts dinámico
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function DecisionesPage() {
   const [decisiones, setDecisiones] = useState([]);
@@ -56,9 +53,18 @@ export default function DecisionesPage() {
   return (
     <div className="w-full min-h-screen bg-white p-10 space-y-10">
 
-      <h1 className="text-2xl font-semibold text-slate-800">
-        Decisiones Cognitivo V6
-      </h1>
+      {/* HEADER */}
+      <div className="flex items-center gap-4">
+        <PremiumIcon icon={Brain} color="purple" size={26} />
+        <div>
+          <h1 className="text-3xl font-semibold text-slate-900">
+            Inteligencia Operativa · Decisiones ADIP
+          </h1>
+          <p className="text-sm text-slate-500">
+            Análisis avanzado de decisiones operativas con IA Cognitiva.
+          </p>
+        </div>
+      </div>
 
       {/* CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

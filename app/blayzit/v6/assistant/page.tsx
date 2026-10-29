@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // IA Cognitiva
 import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
@@ -13,12 +16,6 @@ import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 import { Send, Brain, MessageSquare } from "lucide-react";
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function AssistantPage() {
   const [input, setInput] = useState("");
@@ -62,44 +59,56 @@ export default function AssistantPage() {
     const pregunta = input.toLowerCase();
     let respuestaIA = "";
 
-    // --- PREGUNTAS SOBRE PRIORIDAD ---
+    // PRIORIDAD
     if (pregunta.includes("prioridad") || pregunta.includes("importante")) {
-      respuestaIA = "La prioridad del día se calcula analizando riesgos, señales DNIP, decisiones ADIP y predicciones IA. Aquí tienes la prioridad actual:";
+      respuestaIA =
+        "La prioridad del día se calcula analizando riesgos, señales DNIP, decisiones ADIP y predicciones IA. Aquí tienes la prioridad actual:";
     }
 
-    // --- PREGUNTAS SOBRE RIESGOS ---
+    // RIESGOS
     else if (pregunta.includes("riesgo") || pregunta.includes("riesgos")) {
-      respuestaIA = "Aquí tienes el análisis cognitivo de los riesgos actuales, incluyendo tendencias, escenarios y anomalías.";
+      respuestaIA =
+        "Aquí tienes el análisis cognitivo de los riesgos actuales, incluyendo tendencias, escenarios y anomalías.";
     }
 
-    // --- PREGUNTAS SOBRE SEÑALES DNIP ---
+    // SEÑALES DNIP
     else if (pregunta.includes("señal") || pregunta.includes("dnip")) {
-      respuestaIA = "Las señales DNIP muestran patrones operativos importantes. Aquí tienes el análisis completo.";
+      respuestaIA =
+        "Las señales DNIP muestran patrones operativos importantes. Aquí tienes el análisis completo.";
     }
 
-    // --- PREGUNTAS SOBRE DECISIONES ADIP ---
+    // DECISIONES ADIP
     else if (pregunta.includes("decisiones") || pregunta.includes("adip")) {
-      respuestaIA = "Las decisiones ADIP afectan directamente la estabilidad del sistema. Aquí tienes el análisis cognitivo.";
+      respuestaIA =
+        "Las decisiones ADIP afectan directamente la estabilidad del sistema. Aquí tienes el análisis cognitivo.";
     }
 
-    // --- PREGUNTAS SOBRE IA ---
-    else if (pregunta.includes("prediccion") || pregunta.includes("ia") || pregunta.includes("evento")) {
-      respuestaIA = "Las predicciones IA anticipan eventos futuros. Aquí tienes el análisis completo.";
+    // IA / PREDICCIONES
+    else if (
+      pregunta.includes("prediccion") ||
+      pregunta.includes("ia") ||
+      pregunta.includes("evento")
+    ) {
+      respuestaIA =
+        "Las predicciones IA anticipan eventos futuros. Aquí tienes el análisis completo.";
     }
 
-    // --- PREGUNTAS SOBRE PIPELINES ---
+    // PIPELINES
     else if (pregunta.includes("pipeline")) {
-      respuestaIA = "Los pipelines automáticos y manuales afectan DNIP y ADIP. Aquí tienes el análisis cognitivo.";
+      respuestaIA =
+        "Los pipelines automáticos y manuales afectan DNIP y ADIP. Aquí tienes el análisis cognitivo.";
     }
 
-    // --- PREGUNTAS SOBRE TELEMETRÍA ---
+    // TELEMETRÍA
     else if (pregunta.includes("telemetria") || pregunta.includes("carga")) {
-      respuestaIA = "La telemetría detecta carga, eventos críticos y anomalías. Aquí tienes el análisis completo.";
+      respuestaIA =
+        "La telemetría detecta carga, eventos críticos y anomalías. Aquí tienes el análisis completo.";
     }
 
-    // --- PREGUNTAS GENERALES ---
+    // GENERAL
     else {
-      respuestaIA = "Aquí tienes un análisis cognitivo general del sistema basado en tu pregunta.";
+      respuestaIA =
+        "Aquí tienes un análisis cognitivo general del sistema basado en tu pregunta.";
     }
 
     setRespuesta(respuestaIA);
@@ -120,6 +129,7 @@ export default function AssistantPage() {
           className="flex-1 p-3 rounded-xl border border-slate-300"
           placeholder="Haz una pregunta sobre tu sistema..."
         />
+
         <button
           onClick={procesarPregunta}
           className="px-6 py-3 bg-indigo-600 text-white rounded-xl flex items-center gap-2"
@@ -194,18 +204,6 @@ export default function AssistantPage() {
 
         </div>
       )}
-
-    </div>
-  );
-}
-
-/* CARD */
-function Card({ icon, color, title, value }) {
-  return (
-    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col gap-2">
-      <PremiumIcon icon={icon} color={color} size={22} />
-      <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
-      <p className="text-xl font-bold text-slate-900">{value}</p>
     </div>
   );
 }

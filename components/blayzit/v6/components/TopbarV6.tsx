@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Bell, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/Client";
+import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 

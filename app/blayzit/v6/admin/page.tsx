@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
 
 // IA Cognitiva
 import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
@@ -12,13 +12,12 @@ import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
+
 import { Shield, Lock, Cpu, Zap, Brain, Activity } from "lucide-react";
 
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Supabase (CLIENTE GLOBAL)
+const supabase = createClient();
+
 
 export default function AdminPage() {
   const [user, setUser] = useState(null);

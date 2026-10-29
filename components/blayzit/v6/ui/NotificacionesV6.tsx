@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Bell, X } from "lucide-react";
-import { createClient } from "@/lib/supabase/Client";
+import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
@@ -22,13 +22,15 @@ export default function NotificacionesV6() {
 
   async function cargarDatos() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+
+    // SUPERADMIN TEMPORAL (si quieres ver todo mientras desarrollas)
+    // if (!user) return;
 
     const [r, s, d, p] = await Promise.all([
-      supabase.from("adip_riesgos").select("*").eq("user_id", user.id),
-      supabase.from("dnip_senales").select("*").eq("user_id", user.id),
-      supabase.from("adip_decisiones").select("*").eq("user_id", user.id),
-      supabase.from("ia_predicciones").select("*").eq("user_id", user.id),
+      supabase.from("adip_riesgos").select("*").eq("user_id", user?.id),
+      supabase.from("dnip_senales").select("*").eq("user_id", user?.id),
+      supabase.from("adip_decisiones").select("*").eq("user_id", user?.id),
+      supabase.from("ia_predicciones").select("*").eq("user_id", user?.id),
     ]);
 
     setRiesgos(r.data || []);
@@ -37,18 +39,22 @@ export default function NotificacionesV6() {
     setPredicciones(p.data || []);
   }
 
+  // Agrupación con tipos correctos
   const grouped = [
     ...riesgos.map(r => ({ type: "riesgos", text: r.descripcion || "Riesgo detectado" })),
-    ...senales.map(s => ({ type: "seaales", text: s.descripcion || "Señal detectada" })),
+    ...senales.map(s => ({ type: "senales", text: s.descripcion || "Señal detectada" })),
     ...decisiones.map(d => ({ type: "decisiones", text: d.descripcion || "Decisión pendiente" })),
     ...predicciones.map(p => ({ type: "predicciones", text: p.descripcion || "Predicción IA" })),
   ];
 
+  // Prioridad correcta
   const priority = ["riesgos", "senales", "decisiones", "predicciones"];
   const sorted = grouped.sort((a, b) => priority.indexOf(a.type) - priority.indexOf(b.type));
 
+  // Filtro
   const filtered = filter === "todos" ? sorted : sorted.filter(n => n.type === filter);
 
+  // Colores por tipo
   const typeStyles = {
     riesgos: "bg-rose-50 border-rose-200",
     senales: "bg-amber-50 border-amber-200",
@@ -83,7 +89,9 @@ export default function NotificacionesV6() {
           <div className="space-y-2">
             {sorted.slice(0, 3).map((n, i) => (
               <div key={i} className={`p-3 rounded-lg border ${typeStyles[n.type]}`}>
-                <p className="text-sm text-slate-700 capitalize">{n.type}: {n.text}</p>
+                <p className="text-sm text-slate-700 capitalize">
+                  {n.type === "senales" ? "Señales" : n.type}: {n.text}
+                </p>
                 <p className="text-xs text-slate-500">Hace unos minutos</p>
               </div>
             ))}
@@ -117,7 +125,7 @@ export default function NotificacionesV6() {
 
           {/* Filtros */}
           <div className="flex gap-3">
-            {["Todos", "Riesgos", "senales", "decisiones", "predicciones"].map((f) => (
+            {["todos", "riesgos", "senales", "decisiones", "predicciones"].map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -127,7 +135,7 @@ export default function NotificacionesV6() {
                     : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
                 }`}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {f === "senales" ? "Señales" : f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
           </div>
@@ -136,7 +144,9 @@ export default function NotificacionesV6() {
           <div className="grid grid-cols-1 gap-4">
             {filtered.map((n, i) => (
               <div key={i} className={`p-4 rounded-xl border shadow-sm ${typeStyles[n.type]}`}>
-                <p className="text-sm font-semibold text-slate-700 capitalize">{n.type}</p>
+                <p className="text-sm font-semibold text-slate-700 capitalize">
+                  {n.type === "senales" ? "Señales" : n.type}
+                </p>
                 <p className="text-sm text-slate-600 mt-1">• {n.text}</p>
                 <p className="text-xs text-slate-500 mt-2">Hace unos minutos</p>
               </div>

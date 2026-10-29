@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { createClient } from "@/lib/supabase/Client";
+import { createClient } from "@/lib/supabase/client";
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";

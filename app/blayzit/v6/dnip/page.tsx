@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 import { Activity, AlertTriangle, FileSearch, Gauge } from "lucide-react";
-import { useState } from "react";
 
 export default function DNIPV6() {
   const [text, setText] = useState("");
@@ -40,8 +40,8 @@ export default function DNIPV6() {
 
         <button
           className="
-            flex items-center gap-3 px-6 py-3 rounded-xl 
-            bg-gradient-to-br from-red-500 to-rose-600 
+            flex items-center gap-3 px-6 py-3 rounded-xl
+            bg-gradient-to-br from-red-500 to-rose-600
             text-white font-medium shadow-md hover:shadow-lg transition
           "
         >

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
@@ -19,12 +22,6 @@ import { Zap, Workflow, Activity, Sparkles } from "lucide-react";
 
 // ApexCharts dinámico
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function PipelinesPage() {
   const [pipelines, setPipelines] = useState([]);
@@ -175,7 +172,7 @@ export default function PipelinesPage() {
 
           <AIScenarios
             title="Escenarios IA"
-            data={pipelines.map(p => (p.tipo === "automatico" ? 1 : 0))}
+            data={pipelines.map(p => (p.tipo === "automaticico" ? 1 : 0))}
             type="pipelines"
           />
         </ChartCard>

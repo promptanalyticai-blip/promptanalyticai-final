@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/Client";
+import { createClient } from "@/lib/supabase/client";
 import BlayzitLogoClean from "@/components/blayzit/BlayzitLogoClean";
 import "./login.css";
 

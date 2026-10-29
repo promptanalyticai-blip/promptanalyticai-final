@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // IA Cognitiva
 import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
@@ -14,12 +17,6 @@ import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 import { Settings, Sliders, Zap, Shield, Brain } from "lucide-react";
 
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function SettingsPage() {
   const [riesgos, setRiesgos] = useState([]);
   const [senales, setSenales] = useState([]);
@@ -27,7 +24,6 @@ export default function SettingsPage() {
   const [predicciones, setPredicciones] = useState([]);
   const [telemetry, setTelemetry] = useState([]);
   const [pipelines, setPipelines] = useState([]);
-
   const [recomendaciones, setRecomendaciones] = useState([]);
 
   useEffect(() => {
@@ -61,7 +57,7 @@ export default function SettingsPage() {
     const lista = [];
 
     // Riesgos críticos → ajustar umbrales
-    if (riesgos.filter(r => r.nivel === "critico").length > 0) {
+    if (riesgos?.filter(r => r.nivel === "critico").length > 0) {
       lista.push({
         titulo: "Ajustar umbral de riesgo crítico",
         descripcion: "La IA detecta riesgos críticos frecuentes. Se recomienda bajar el umbral de alerta.",
@@ -71,7 +67,7 @@ export default function SettingsPage() {
     }
 
     // Señales DNIP disparadas → ajustar sensibilidad
-    if (senales.filter(s => s.criticidad >= 80).length > 5) {
+    if (senales?.filter(s => s.criticidad >= 80).length > 5) {
       lista.push({
         titulo: "Aumentar sensibilidad DNIP",
         descripcion: "Las señales DNIP están disparándose con frecuencia. Ajustar sensibilidad puede mejorar estabilidad.",
@@ -81,7 +77,7 @@ export default function SettingsPage() {
     }
 
     // Decisiones rechazadas → ajustar criterios ADIP
-    if (decisiones.filter(d => d.estado === "rechazada").length > decisiones.filter(d => d.estado === "aprobada").length) {
+    if (decisiones?.filter(d => d.estado === "rechazada").length > decisiones?.filter(d => d.estado === "aprobada").length) {
       lista.push({
         titulo: "Optimizar criterios ADIP",
         descripcion: "Las decisiones rechazadas superan las aprobadas. La IA recomienda ajustar criterios.",
@@ -91,7 +87,7 @@ export default function SettingsPage() {
     }
 
     // Predicciones IA peligrosas → ajustar modelo
-    if (predicciones.filter(p => p.probabilidad >= 75).length > 0) {
+    if (predicciones?.filter(p => p.probabilidad >= 75).length > 0) {
       lista.push({
         titulo: "Reentrenar modelo IA",
         descripcion: "La IA detecta eventos futuros con alta probabilidad. Reentrenar el modelo puede mejorar precisión.",
@@ -101,7 +97,7 @@ export default function SettingsPage() {
     }
 
     // Telemetría crítica → ajustar límites
-    if (telemetry.filter(t => t.nivel === "critico").length > 0) {
+    if (telemetry?.filter(t => t.nivel === "critico").length > 0) {
       lista.push({
         titulo: "Ajustar límites de carga",
         descripcion: "Telemetría detecta carga crítica. Ajustar límites puede evitar saturación.",
@@ -111,7 +107,7 @@ export default function SettingsPage() {
     }
 
     // Pipelines en error → ajustar automatización
-    if (pipelines.filter(p => p.estado === "error").length > 0) {
+    if (pipelines?.filter(p => p.estado === "error").length > 0) {
       lista.push({
         titulo: "Optimizar automatización de pipelines",
         descripcion: "Hay pipelines en error. Ajustar automatización puede mejorar estabilidad.",
@@ -125,7 +121,6 @@ export default function SettingsPage() {
 
   return (
     <div className="w-full min-h-screen bg-white p-10 space-y-10">
-
       <h1 className="text-2xl font-semibold text-slate-800">
         Configuración Inteligente V7
       </h1>
@@ -145,27 +140,9 @@ export default function SettingsPage() {
       </div>
 
       {/* IA GLOBAL */}
-      <AICorrelationEngine
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIPrioridad
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIAnomalias
-        title="Anomalías Detectadas (IA)"
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
+      <AICorrelationEngine riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIPrioridad riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIAnomalias title="Anomalías Detectadas (IA)" riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
 
       <AIInsight
         title="Explicación IA"
@@ -193,7 +170,6 @@ export default function SettingsPage() {
         ]}
         type="overview"
       />
-
     </div>
   );
 }

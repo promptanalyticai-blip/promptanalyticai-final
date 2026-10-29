@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (ruta correcta)
+import { createClient } from "../../../../lib/supabase/client";
+const supabase = createClient();
 
 // IA Cognitiva
 import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
@@ -14,12 +17,6 @@ import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 import { CheckCircle, Zap, Shield, Brain, Activity } from "lucide-react";
 
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function ActionsPage() {
   const [riesgos, setRiesgos] = useState([]);
   const [senales, setSenales] = useState([]);
@@ -27,7 +24,6 @@ export default function ActionsPage() {
   const [predicciones, setPredicciones] = useState([]);
   const [telemetry, setTelemetry] = useState([]);
   const [pipelines, setPipelines] = useState([]);
-
   const [acciones, setAcciones] = useState([]);
 
   useEffect(() => {
@@ -60,7 +56,6 @@ export default function ActionsPage() {
   function generarAcciones(riesgos, senales, decisiones, predicciones, telemetry, pipelines) {
     const lista = [];
 
-    // Riesgos críticos
     const criticos = riesgos.filter(r => r.nivel === "critico");
     if (criticos.length > 0) {
       lista.push({
@@ -73,7 +68,6 @@ export default function ActionsPage() {
       });
     }
 
-    // Señales DNIP disparadas
     const disparadas = senales.filter(s => s.criticidad >= 80);
     if (disparadas.length > 0) {
       lista.push({
@@ -86,7 +80,6 @@ export default function ActionsPage() {
       });
     }
 
-    // Decisiones rechazadas
     const rechazadas = decisiones.filter(d => d.estado === "rechazada");
     if (rechazadas.length > decisiones.filter(d => d.estado === "aprobada").length) {
       lista.push({
@@ -99,7 +92,6 @@ export default function ActionsPage() {
       });
     }
 
-    // Predicciones IA peligrosas
     const peligrosas = predicciones.filter(p => p.probabilidad >= 75);
     if (peligrosas.length > 0) {
       lista.push({
@@ -112,7 +104,6 @@ export default function ActionsPage() {
       });
     }
 
-    // Telemetría crítica
     const teleCritica = telemetry.filter(t => t.nivel === "critico");
     if (teleCritica.length > 0) {
       lista.push({
@@ -125,7 +116,6 @@ export default function ActionsPage() {
       });
     }
 
-    // Pipelines en error
     const errorPipelines = pipelines.filter(p => p.estado === "error");
     if (errorPipelines.length > 0) {
       lista.push({
@@ -143,7 +133,6 @@ export default function ActionsPage() {
 
   return (
     <div className="w-full min-h-screen bg-white p-10 space-y-10">
-
       <h1 className="text-2xl font-semibold text-slate-800">
         Acciones Inteligentes V7
       </h1>
@@ -163,55 +152,25 @@ export default function ActionsPage() {
       </div>
 
       {/* IA GLOBAL */}
-      <AICorrelationEngine
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIPrioridad
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIAnomalias
-        title="Anomalías Detectadas (IA)"
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIInsight
-        title="Explicación IA"
-        data={[
-          riesgos.length,
-          senales.length,
-          decisiones.length,
-          predicciones.length,
-          telemetry.length,
-          pipelines.length,
-        ]}
-        type="overview"
-        timeframe="7d"
-      />
-
-      <AIScenarios
-        title="Escenarios IA"
-        data={[
-          riesgos.length,
-          senales.length,
-          decisiones.length,
-          predicciones.length,
-          telemetry.length,
-          pipelines.length,
-        ]}
-        type="overview"
-      />
-
+      <AICorrelationEngine riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIPrioridad riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIAnomalias title="Anomalías Detectadas (IA)" riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIInsight title="Explicación IA" data={[
+        riesgos.length,
+        senales.length,
+        decisiones.length,
+        predicciones.length,
+        telemetry.length,
+        pipelines.length,
+      ]} type="overview" timeframe="7d" />
+      <AIScenarios title="Escenarios IA" data={[
+        riesgos.length,
+        senales.length,
+        decisiones.length,
+        predicciones.length,
+        telemetry.length,
+        pipelines.length,
+      ]} type="overview" />
     </div>
   );
 }

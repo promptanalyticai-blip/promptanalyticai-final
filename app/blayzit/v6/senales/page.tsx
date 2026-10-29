@@ -1,252 +1,149 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+// Supabase correcto
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
+
+// ApexCharts
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+// IA Cognitiva
+import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
+import AIAnomalias from "@/components/blayzit/v6/ui/AIAnomalias";
+import AIInsight from "@/components/blayzit/v6/ui/AIInsight";
+import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 
-// IA Cognitiva
-import AIInsight from "@/components/blayzit/v6/ui/AIInsight";
-import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
-import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
-import AIPrioridad from "@/components/blayzit/v6/ui/AIPrioridad";
-import AIAnomalias from "@/components/blayzit/v6/ui/AIAnomalias";
-
 // Icons
-import { Activity, Zap, AlertTriangle, Sparkles } from "lucide-react";
-
-// ApexCharts dinámico
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { Radar, AlertTriangle } from "lucide-react";
 
 export default function SenalesPage() {
   const [senales, setSenales] = useState([]);
-  const [riesgos, setRiesgos] = useState([]);
-  const [decisiones, setDecisiones] = useState([]);
-  const [predicciones, setPredicciones] = useState([]);
 
   useEffect(() => {
-    cargarTodo();
+    cargarSenales();
   }, []);
 
-  async function cargarTodo() {
+  async function cargarSenales() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const [s, r, d, p] = await Promise.all([
-      supabase.from("dnip_senales").select("*").eq("user_id", user.id),
-      supabase.from("adip_riesgos").select("*").eq("user_id", user.id),
-      supabase.from("adip_decisiones").select("*").eq("user_id", user.id),
-      supabase.from("ia_predicciones").select("*").eq("user_id", user.id),
-    ]);
+    const { data } = await supabase
+      .from("dnip_senales")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("creado_en", { ascending: false });
 
-    setSenales(s.data || []);
-    setRiesgos(r.data || []);
-    setDecisiones(d.data || []);
-    setPredicciones(p.data || []);
+    setSenales(data || []);
   }
 
+  const criticidades = senales.map((s) => s.criticidad);
+  const labels = senales.map((s) =>
+    new Date(s.creado_en).toLocaleTimeString()
+  );
+
   return (
-    <div className="w-full min-h-screen bg-white p-10 space-y-10">
+    <div className="w-full min-h-screen bg-white px-10 py-12 space-y-12">
 
-      <h1 className="text-2xl font-semibold text-slate-800">
-        Señales DNIP Cognitivo V6
-      </h1>
-
-      {/* CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-        <Card
-          icon={Activity}
-          color="amber"
-          title="Total Señales"
-          value={senales.length}
-        />
-
-        <Card
-          icon={AlertTriangle}
-          color="rose"
-          title="Críticas"
-          value={senales.filter(s => s.criticidad >= 80).length}
-        />
-
-        <Card
-          icon={Zap}
-          color="indigo"
-          title="Automatizadas"
-          value={senales.filter(s => s.automatizada === true).length}
-        />
-
-        <Card
-          icon={Sparkles}
-          color="emerald"
-          title="Estables"
-          value={senales.filter(s => s.criticidad < 40).length}
-        />
-
+      {/* HEADER */}
+      <div className="flex items-center gap-4">
+        <PremiumIcon icon={Radar} color="cyan" size={26} />
+        <div>
+          <h1 className="text-3xl font-semibold text-slate-900">
+            Inteligencia Operativa · Señales DNIP
+          </h1>
+          <p className="text-sm text-slate-500">
+            Análisis avanzado de señales operativas con IA Cognitiva.
+          </p>
+        </div>
       </div>
 
-      {/* GRÁFICOS + IA */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {/* LISTA DE SEÑALES */}
+      <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4">
+        <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-cyan-600" />
+          Señales detectadas
+        </h3>
 
-        {/* CRITICIDAD */}
-        <ChartCard title="Tendencia de Criticidad DNIP">
-          <Chart
-            type="line"
-            height={300}
-            series={[
-              {
-                name: "Criticidad",
-                data: senales.map(s => s.criticidad || 0),
-              },
-            ]}
-            options={{
-              chart: { toolbar: { show: false } },
-              colors: ["#f97316"],
-              stroke: { curve: "smooth" },
-              xaxis: {
-                categories: senales.map(s => s.fecha || "N/A"),
-              },
-            }}
-          />
+        {senales.length === 0 ? (
+          <p className="text-sm text-slate-500">No hay señales registradas.</p>
+        ) : (
+          <div className="space-y-3">
+            {senales.map((s) => (
+              <div
+                key={s.id}
+                className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between"
+              >
+                <div className="flex flex-col">
+                  <p className="text-sm font-semibold text-slate-800">
+                    Tipo: {s.tipo}
+                  </p>
+                  <p className="text-xs text-slate-500">{s.descripcion}</p>
+                </div>
 
-          <AIInsight
-            title="Explicación IA"
-            data={senales.map(s => s.criticidad || 0)}
-            type="senales"
-            timeframe="7d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={senales.map(s => s.criticidad || 0)}
-            type="senales"
-          />
-        </ChartCard>
-
-        {/* AUTOMATIZADAS */}
-        <ChartCard title="Señales Automatizadas">
-          <Chart
-            type="bar"
-            height={300}
-            series={[
-              {
-                name: "Automatizadas",
-                data: senales.map(s => (s.automatizada ? 1 : 0)),
-              },
-            ]}
-            options={{
-              chart: { toolbar: { show: false } },
-              colors: ["#6366f1"],
-              xaxis: {
-                categories: senales.map(s => s.fecha || "N/A"),
-              },
-            }}
-          />
-
-          <AIInsight
-            title="Explicación IA"
-            data={senales.map(s => (s.automatizada ? 1 : 0))}
-            type="senales"
-            timeframe="15d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={senales.map(s => (s.automatizada ? 1 : 0))}
-            type="senales"
-          />
-        </ChartCard>
-
-        {/* CATEGORÍAS */}
-        <ChartCard title="Señales por Categoría">
-          <Chart
-            type="pie"
-            height={300}
-            series={Object.values(
-              senales.reduce((acc, s) => {
-                acc[s.categoria] = (acc[s.categoria] || 0) + 1;
-                return acc;
-              }, {})
-            )}
-            options={{
-              labels: Object.keys(
-                senales.reduce((acc, s) => {
-                  acc[s.categoria] = (acc[s.categoria] || 0) + 1;
-                  return acc;
-                }, {})
-              ),
-              colors: ["#e11d48", "#f97316", "#10b981", "#6366f1", "#8b5cf6"],
-            }}
-          />
-
-          <AIInsight
-            title="Explicación IA"
-            data={Object.values(
-              senales.reduce((acc, s) => {
-                acc[s.categoria] = (acc[s.categoria] || 0) + 1;
-                return acc;
-              }, {})
-            )}
-            type="senales"
-            timeframe="30d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={Object.values(
-              senales.reduce((acc, s) => {
-                acc[s.categoria] = (acc[s.categoria] || 0) + 1;
-                return acc;
-              }, {})
-            )}
-            type="senales"
-          />
-        </ChartCard>
-
+                <div className="flex flex-col items-end">
+                  <span className="text-xs text-slate-500">
+                    Criticidad: {s.criticidad}
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    {new Date(s.creado_en).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* IA GLOBAL */}
-      <AICorrelationEngine
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
+      {/* GRÁFICO DE CRITICIDAD */}
+      <ChartCard title="Tendencia de criticidad de señales">
+        <Chart
+          type="line"
+          height={300}
+          series={[{ name: "Criticidad", data: criticidades }]}
+          options={{
+            chart: { toolbar: { show: false } },
+            stroke: { curve: "smooth" },
+            xaxis: { categories: labels },
+            colors: ["#06b6d4"],
+          }}
+        />
+      </ChartCard>
+
+      {/* IA COGNITIVA */}
+      <AIInsight
+        title="Explicación IA"
+        data={[senales.length]}
+        type="senales"
+        timeframe="24h"
       />
 
-      <AIPrioridad
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
+      <AIScenarios
+        title="Escenarios IA"
+        data={[senales.length]}
+        type="senales"
       />
 
       <AIAnomalias
-        title="Anomalías en Señales DNIP (IA)"
-        riesgos={riesgos}
+        title="Anomalías en señales"
+        riesgos={[]}
         senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
+        decisiones={[]}
+        predicciones={[]}
       />
 
-    </div>
-  );
-}
+      <AICorrelationEngine
+        riesgos={[]}
+        senales={senales}
+        decisiones={[]}
+        predicciones={[]}
+      />
 
-/* CARD RESUMEN */
-function Card({ icon, color, title, value }) {
-  return (
-    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col gap-2">
-      <PremiumIcon icon={icon} color={color} size={22} />
-      <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
-      <p className="text-xl font-bold text-slate-900">{value}</p>
     </div>
   );
 }
@@ -254,8 +151,8 @@ function Card({ icon, color, title, value }) {
 /* CARD DE GRÁFICO */
 function ChartCard({ title, children }) {
   return (
-    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
-      <h3 className="text-sm font-semibold text-slate-800 mb-4">{title}</h3>
+    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4">
+      <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
       {children}
     </div>
   );

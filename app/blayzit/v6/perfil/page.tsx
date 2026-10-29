@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
-import { User, Shield, Activity, ChevronRight } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
+
+// Icons
+import { User, Shield, Activity, ChevronRight } from "lucide-react";
 
 export default function PerfilPage() {
   const [user, setUser] = useState(null);
@@ -16,30 +16,31 @@ export default function PerfilPage() {
   const [plan, setPlan] = useState("basic");
 
   useEffect(() => {
-    const load = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-
-      if (!user) return;
-
-      const { data: planData } = await supabase
-        .from("user_plans")
-        .select("plan")
-        .eq("user_id", user.id)
-        .single();
-
-      setPlan(planData?.plan || "basic");
-
-      const { data: rolesData } = await supabase
-        .from("user_roles")
-        .select("*")
-        .eq("user_id", user.id);
-
-      setRoles(rolesData || []);
-    };
-
-    load();
+    cargarPerfil();
   }, []);
+
+  async function cargarPerfil() {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+    if (!user) return;
+
+    // PLAN
+    const { data: planData } = await supabase
+      .from("user_plans")
+      .select("plan")
+      .eq("user_id", user.id)
+      .single();
+
+    setPlan(planData?.plan || "basic");
+
+    // ROLES
+    const { data: rolesData } = await supabase
+      .from("user_roles")
+      .select("*")
+      .eq("user_id", user.id);
+
+    setRoles(rolesData || []);
+  }
 
   return (
     <div className="w-full min-h-screen bg-white px-10 py-12">
@@ -48,8 +49,10 @@ export default function PerfilPage() {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
         {/* PANEL IZQUIERDO */}
         <div className="space-y-6">
+
           {/* Usuario */}
           <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm">
             <div className="flex items-center gap-4">
@@ -60,7 +63,6 @@ export default function PerfilPage() {
                 height={70}
                 className="rounded-full border border-slate-300 shadow-sm"
               />
-
               <div>
                 <p className="text-lg font-semibold text-slate-800">
                   {user?.email || "Usuario"}
@@ -74,34 +76,48 @@ export default function PerfilPage() {
           <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm">
             <div className="flex items-center gap-3 mb-4">
               <Shield className="h-5 w-5 text-slate-600" />
-              <h3 className="text-sm font-semibold text-slate-800">Seguridad</h3>
+              <h3 className="text-sm font-semibold text-slate-800">
+                Seguridad
+              </h3>
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-700">Autenticación en dos pasos</span>
+                <span className="text-sm text-slate-700">
+                  Autenticación en dos pasos
+                </span>
                 <input type="checkbox" defaultChecked className="h-4 w-4" />
               </div>
             </div>
           </div>
+
         </div>
 
         {/* PANEL DERECHO */}
         <div className="col-span-2 space-y-10">
+
           {/* Roles */}
           <div className="p-8 bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <User className="h-5 w-5 text-slate-600" />
-              <h3 className="text-lg font-semibold text-slate-800">Roles y permisos</h3>
+              <h3 className="text-lg font-semibold text-slate-800">
+                Roles y permisos
+              </h3>
             </div>
 
             <div className="space-y-4">
               {roles.map((r) => (
-                <div key={r.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                <div
+                  key={r.id}
+                  className="p-4 bg-slate-50 border border-slate-200 rounded-xl"
+                >
                   <p className="text-sm font-semibold text-slate-700">
                     Workspace: {r.workspace_id || "Principal"}
                   </p>
-                  <p className="text-xs text-slate-500 mb-2">Rol: {r.role}</p>
+
+                  <p className="text-xs text-slate-500 mb-2">
+                    Rol: {r.role}
+                  </p>
 
                   <div className="flex flex-wrap gap-2">
                     {r.permissions?.map((p, idx) => (
@@ -122,15 +138,22 @@ export default function PerfilPage() {
           <div className="p-8 bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Activity className="h-5 w-5 text-slate-600" />
-              <h3 className="text-lg font-semibold text-slate-800">Auditoría personal</h3>
+              <h3 className="text-lg font-semibold text-slate-800">
+                Auditoría personal
+              </h3>
             </div>
 
             {plan === "basic" ? (
               <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Disponible en plan Premium</p>
-                  <p className="text-xs text-slate-500">Accede a tu historial y trazabilidad personal</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    Disponible en plan Premium
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Accede a tu historial y trazabilidad personal
+                  </p>
                 </div>
+
                 <button className="px-4 py-2 bg-slate-300 text-slate-600 rounded-lg text-sm cursor-not-allowed">
                   Stripe no está configurado
                 </button>
@@ -142,6 +165,7 @@ export default function PerfilPage() {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>
@@ -153,7 +177,9 @@ function AuditItem({ title }) {
     <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
       <div>
         <p className="text-sm font-medium text-slate-700">{title}</p>
-        <p className="text-xs text-slate-500">Datos reales cuando conectemos Stripe</p>
+        <p className="text-xs text-slate-500">
+          Datos reales cuando conectemos Stripe
+        </p>
       </div>
       <ChevronRight className="h-5 w-5 text-slate-500" />
     </div>

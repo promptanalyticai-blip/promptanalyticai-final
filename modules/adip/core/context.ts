@@ -1,5 +1,5 @@
 // modules/adip/core/context.ts
-import { createClient } from "@/lib/supabase/Client";
+import { createClient } from "@/lib/supabase/client";
 
 export const supabase = createClient();
 

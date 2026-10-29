@@ -1,7 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import dynamic from "next/dynamic";
+
+// Supabase CORRECTO
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
+
+// UI
+import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
+
+// IA Cognitiva
+import AIInsight from "@/components/blayzit/v6/ui/AIInsight";
+import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
+import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
+import AIPrioridad from "@/components/blayzit/v6/ui/AIPrioridad";
+import AIAnomalias from "@/components/blayzit/v6/ui/AIAnomalias";
+
+// Icons
 import {
   Activity,
   TrendingUp,
@@ -9,175 +25,128 @@ import {
   Brain,
   BarChart3,
   Radar,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
+// Tus componentes
 import MetricCard from "./components/MetricCard";
-import ChartBar from "./components/ChartBar";
-import TrendCard from "./components/TrendCard";
 import LineChart from "./components/LineChart";
 import AreaChart from "./components/AreaChart";
 import IndicatorCard from "./components/IndicatorCard";
 import PredictionItem from "./components/PredictionItem";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// ApexCharts dinámico
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function ResultadosV6() {
-  const [riesgos, setRiesgos] = useState(0);
-  const [decisiones, setDecisiones] = useState(0);
-  const [senales, setSenales] = useState(0);
-  const [prediccionesIA, setPrediccionesIA] = useState(0);
-
-  const [precisionIA, setPrecisionIA] = useState(92);
-  const [tendencia, setTendencia] = useState("+12%");
-  const [telemetria, setTelemetria] = useState(0);
-
-  const [grafico, setGrafico] = useState([]);
-  const [graficoIA, setGraficoIA] = useState([]);
-  const [listaPredicciones, setListaPredicciones] = useState([]);
+export default function ResultadosOmniversalV6() {
+  const [riesgos, setRiesgos] = useState([]);
+  const [decisiones, setDecisiones] = useState([]);
+  const [senales, setSenales] = useState([]);
+  const [predicciones, setPredicciones] = useState([]);
+  const [telemetria, setTelemetria] = useState([]);
 
   useEffect(() => {
-    cargarRiesgos();
-    cargarDecisiones();
-    cargarSenales();
-    cargarPrediccionesIA();
-    cargarTelemetria();
-    cargarActividadGeneral();
+    cargarTodo();
   }, []);
 
-  async function cargarRiesgos() {
+  async function cargarTodo() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data } = await supabase
-      .from("adip_riesgos")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("estado", "activo");
+    const [r, d, s, p, t] = await Promise.all([
+      supabase.from("adip_riesgos").select("*").eq("user_id", user.id),
+      supabase.from("adip_decisiones").select("*").eq("user_id", user.id),
+      supabase.from("dnip_senales").select("*").eq("user_id", user.id),
+      supabase.from("ia_predicciones").select("*").eq("user_id", user.id),
+      supabase.from("telemetry").select("*").eq("user_id", user.id),
+    ]);
 
-    setRiesgos(data?.length || 0);
-  }
-
-  async function cargarDecisiones() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("adip_decisiones")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("estado", "procesada");
-
-    setDecisiones(data?.length || 0);
-  }
-
-  async function cargarSenales() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("dnip_senales")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("estado", "activa");
-
-    setSenales(data?.length || 0);
-  }
-
-  async function cargarPrediccionesIA() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("ia_predicciones")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("estado", "activa");
-
-    setPrediccionesIA(data?.length || 0);
-    setGraficoIA(data?.map((d) => d.probabilidad) || []);
-    setListaPredicciones(data || []);
-  }
-
-  async function cargarTelemetria() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("telemetria_sistema")
-      .select("actividad")
-      .eq("user_id", user.id)
-      .order("creado_en", { ascending: false })
-      .limit(1);
-
-    if (data && data.length > 0) {
-      setTelemetria(data[0].actividad);
-    }
-  }
-
-  async function cargarActividadGeneral() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("actividad_general")
-      .select("valor")
-      .eq("user_id", user.id)
-      .order("creado_en", { ascending: false })
-      .limit(12);
-
-    if (data) {
-      setGrafico(data.map((d) => d.valor));
-    }
+    setRiesgos(r.data || []);
+    setDecisiones(d.data || []);
+    setSenales(s.data || []);
+    setPredicciones(p.data || []);
+    setTelemetria(t.data || []);
   }
 
   return (
-    <div className="w-full min-h-screen bg-white px-10 py-12 space-y-10">
+    <div className="w-full min-h-screen bg-white px-10 py-12 space-y-12">
 
-      <h1 className="text-2xl font-semibold text-slate-800">
-        Resultados operativos
-      </h1>
+      {/* HEADER */}
+      <div className="flex items-center gap-4">
+        <PremiumIcon icon={Sparkles} color="amber" size={26} />
+        <div>
+          <h1 className="text-3xl font-semibold text-slate-900">
+            Resultados Omniversal V6
+          </h1>
+          <p className="text-sm text-slate-500">
+            Inteligencia global del sistema · IA Cognitiva · Telemetría avanzada
+          </p>
+        </div>
+      </div>
 
       {/* MÉTRICAS */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        <MetricCard icon={<AlertTriangle className="h-5 w-5 text-rose-600" />} title="Riesgos activos" value={riesgos} />
-        <MetricCard icon={<Brain className="h-5 w-5 text-indigo-600" />} title="Decisiones procesadas" value={decisiones} />
-        <MetricCard icon={<Radar className="h-5 w-5 text-cyan-600" />} title="Señales activas" value={senales} />
-        <MetricCard icon={<Sparkles className="h-5 w-5 text-purple-600" />} title="Predicciones IA" value={prediccionesIA} />
-        <MetricCard icon={<Activity className="h-5 w-5 text-emerald-600" />} title="Actividad del sistema" value={`${telemetria}%`} />
+        <MetricCard
+          icon={<AlertTriangle className="h-5 w-5 text-rose-600" />}
+          title="Riesgos"
+          value={riesgos.length}
+        />
+        <MetricCard
+          icon={<Brain className="h-5 w-5 text-indigo-600" />}
+          title="Decisiones"
+          value={decisiones.length}
+        />
+        <MetricCard
+          icon={<Radar className="h-5 w-5 text-cyan-600" />}
+          title="Señales"
+          value={senales.length}
+        />
+        <MetricCard
+          icon={<Sparkles className="h-5 w-5 text-purple-600" />}
+          title="Predicciones IA"
+          value={predicciones.length}
+        />
+        <MetricCard
+          icon={<Activity className="h-5 w-5 text-emerald-600" />}
+          title="Telemetría"
+          value={telemetria.length}
+        />
       </div>
 
-      {/* GRÁFICO DE LÍNEAS */}
+      {/* GRÁFICO DE ACTIVIDAD */}
       <div className="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-800 mb-4">Actividad histórica</h2>
-        <LineChart data={grafico} />
+        <h2 className="text-sm font-semibold text-slate-800 mb-4">
+          Actividad histórica del sistema
+        </h2>
+        <LineChart data={telemetria.map(t => t.actividad)} />
       </div>
 
-      {/* GRÁFICO DE ÁREA */}
+      {/* TENDENCIAS IA */}
       <div className="p-8 bg-slate-50 border border-slate-200 rounded-2xl shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-800 mb-4">Tendencias IA</h2>
-        <AreaChart data={graficoIA} />
+        <h2 className="text-sm font-semibold text-slate-800 mb-4">
+          Tendencias IA
+        </h2>
+        <AreaChart data={predicciones.map(p => p.probabilidad)} />
       </div>
 
       {/* INDICADORES IA */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <IndicatorCard label="Precisión IA" value={`${precisionIA}%`} color="emerald" />
-        <IndicatorCard label="Predicciones activas" value={prediccionesIA} color="purple" />
-        <IndicatorCard label="Tendencia general" value={tendencia} color="indigo" />
+        <IndicatorCard label="Precisión IA" value="92%" color="emerald" />
+        <IndicatorCard label="Predicciones activas" value={predicciones.length} color="purple" />
+        <IndicatorCard label="Tendencia general" value="+12%" color="indigo" />
       </div>
 
-      {/* PANEL DETALLADO DE PREDICCIONES IA */}
+      {/* PREDICCIONES DETALLADAS */}
       <div className="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4">
-        <h2 className="text-sm font-semibold text-slate-800 mb-4">Predicciones IA detalladas</h2>
+        <h2 className="text-sm font-semibold text-slate-800 mb-4">
+          Predicciones IA detalladas
+        </h2>
 
-        {listaPredicciones.length === 0 ? (
+        {predicciones.length === 0 ? (
           <p className="text-sm text-slate-500">No hay predicciones activas.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {listaPredicciones.map((p) => (
+            {predicciones.map((p) => (
               <PredictionItem
                 key={p.id}
                 tipo={p.tipo}
@@ -190,6 +159,32 @@ export default function ResultadosV6() {
           </div>
         )}
       </div>
+
+      {/* IA GLOBAL */}
+      <AICorrelationEngine
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+      />
+
+      <AIPrioridad
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+      />
+
+      <AIAnomalias
+        title="Anomalías globales del sistema"
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+      />
 
     </div>
   );

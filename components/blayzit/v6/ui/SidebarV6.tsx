@@ -49,6 +49,7 @@ export default function SidebarV6() {
           alt="BLAYZIT Logo"
           width={350}
           height={350}
+          loading="eager"
           className="object-contain"
         />
 

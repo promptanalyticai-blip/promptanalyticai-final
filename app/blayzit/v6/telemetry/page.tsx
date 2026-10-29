@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (ruta FINAL correcta)
+import { createClient } from "../../../../lib/supabase/client";
+const supabase = createClient();
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
@@ -19,12 +22,6 @@ import { Activity, Cpu, Gauge, Zap } from "lucide-react";
 
 // ApexCharts dinámico
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function TelemetryPage() {
   const [telemetry, setTelemetry] = useState([]);
@@ -58,80 +55,37 @@ export default function TelemetryPage() {
 
   return (
     <div className="w-full min-h-screen bg-white p-10 space-y-10">
-
       <h1 className="text-2xl font-semibold text-slate-800">
         Telemetría Cognitivo V6
       </h1>
 
       {/* CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-        <Card
-          icon={Cpu}
-          color="indigo"
-          title="Eventos Totales"
-          value={telemetry.length}
-        />
-
-        <Card
-          icon={Activity}
-          color="rose"
-          title="Eventos Críticos"
-          value={telemetry.filter(t => t.nivel === "critico").length}
-        />
-
-        <Card
-          icon={Gauge}
-          color="amber"
-          title="Eventos de Carga"
-          value={telemetry.filter(t => t.tipo === "carga").length}
-        />
-
-        <Card
-          icon={Zap}
-          color="emerald"
-          title="Eventos Estables"
-          value={telemetry.filter(t => t.nivel === "bajo").length}
-        />
-
+        <Card icon={Cpu} color="indigo" title="Eventos Totales" value={telemetry.length} />
+        <Card icon={Activity} color="rose" title="Eventos Críticos" value={telemetry.filter(t => t.nivel === "critico").length} />
+        <Card icon={Gauge} color="amber" title="Eventos de Carga" value={telemetry.filter(t => t.tipo === "carga").length} />
+        <Card icon={Zap} color="emerald" title="Eventos Estables" value={telemetry.filter(t => t.nivel === "bajo").length} />
       </div>
 
       {/* GRÁFICOS + IA */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-
         {/* NIVEL */}
         <ChartCard title="Tendencia de Nivel de Telemetría">
           <Chart
             type="line"
             height={300}
             series={[
-              {
-                name: "Nivel",
-                data: telemetry.map(t => t.valor || 0),
-              },
+              { name: "Nivel", data: telemetry.map(t => t.valor || 0) }
             ]}
             options={{
               chart: { toolbar: { show: false } },
               colors: ["#6366f1"],
               stroke: { curve: "smooth" },
-              xaxis: {
-                categories: telemetry.map(t => t.fecha || "N/A"),
-              },
+              xaxis: { categories: telemetry.map(t => t.fecha || "N/A") },
             }}
           />
-
-          <AIInsight
-            title="Explicación IA"
-            data={telemetry.map(t => t.valor || 0)}
-            type="telemetry"
-            timeframe="7d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={telemetry.map(t => t.valor || 0)}
-            type="telemetry"
-          />
+          <AIInsight title="Explicación IA" data={telemetry.map(t => t.valor || 0)} type="telemetry" timeframe="7d" />
+          <AIScenarios title="Escenarios IA" data={telemetry.map(t => t.valor || 0)} type="telemetry" />
         </ChartCard>
 
         {/* TIPOS */}
@@ -155,29 +109,18 @@ export default function TelemetryPage() {
               colors: ["#e11d48", "#f97316", "#10b981", "#6366f1"],
             }}
           />
-
-          <AIInsight
-            title="Explicación IA"
-            data={Object.values(
-              telemetry.reduce((acc, t) => {
-                acc[t.tipo] = (acc[t.tipo] || 0) + 1;
-                return acc;
-              }, {})
-            )}
-            type="telemetry"
-            timeframe="15d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={Object.values(
-              telemetry.reduce((acc, t) => {
-                acc[t.tipo] = (acc[t.tipo] || 0) + 1;
-                return acc;
-              }, {})
-            )}
-            type="telemetry"
-          />
+          <AIInsight title="Explicación IA" data={Object.values(
+            telemetry.reduce((acc, t) => {
+              acc[t.tipo] = (acc[t.tipo] || 0) + 1;
+              return acc;
+            }, {})
+          )} type="telemetry" timeframe="15d" />
+          <AIScenarios title="Escenarios IA" data={Object.values(
+            telemetry.reduce((acc, t) => {
+              acc[t.tipo] = (acc[t.tipo] || 0) + 1;
+              return acc;
+            }, {})
+          )} type="telemetry" />
         </ChartCard>
 
         {/* RADIAL */}
@@ -191,46 +134,15 @@ export default function TelemetryPage() {
               colors: ["#6366f1", "#8b5cf6", "#10b981", "#e11d48"],
             }}
           />
-
-          <AIInsight
-            title="Explicación IA"
-            data={telemetry.map(t => t.valor || 0)}
-            type="telemetry"
-            timeframe="30d"
-          />
-
-          <AIScenarios
-            title="Escenarios IA"
-            data={telemetry.map(t => t.valor || 0)}
-            type="telemetry"
-          />
+          <AIInsight title="Explicación IA" data={telemetry.map(t => t.valor || 0)} type="telemetry" timeframe="30d" />
+          <AIScenarios title="Escenarios IA" data={telemetry.map(t => t.valor || 0)} type="telemetry" />
         </ChartCard>
-
       </div>
 
       {/* IA GLOBAL */}
-      <AICorrelationEngine
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIPrioridad
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIAnomalias
-        title="Anomalías en Telemetría (IA)"
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
+      <AICorrelationEngine riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIPrioridad riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIAnomalias title="Anomalías en Telemetría (IA)" riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
     </div>
   );
 }

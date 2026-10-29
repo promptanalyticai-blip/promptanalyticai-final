@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
+
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
 
 // UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
@@ -19,12 +22,6 @@ import { Brain, Zap, AlertTriangle, Sparkles } from "lucide-react";
 
 // ApexCharts dinámico
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-// Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function IAPage() {
   const [predicciones, setPredicciones] = useState([]);
@@ -55,42 +52,16 @@ export default function IAPage() {
 
   return (
     <div className="w-full min-h-screen bg-white p-10 space-y-10">
-
       <h1 className="text-2xl font-semibold text-slate-800">
         Predicciones IA Cognitivo V6
       </h1>
 
       {/* CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-        <Card
-          icon={Brain}
-          color="indigo"
-          title="Total Predicciones"
-          value={predicciones.length}
-        />
-
-        <Card
-          icon={AlertTriangle}
-          color="rose"
-          title="Críticas"
-          value={predicciones.filter(p => p.probabilidad >= 80).length}
-        />
-
-        <Card
-          icon={Zap}
-          color="amber"
-          title="Eventos Próximos"
-          value={predicciones.filter(p => p.probabilidad >= 60).length}
-        />
-
-        <Card
-          icon={Sparkles}
-          color="emerald"
-          title="Estables"
-          value={predicciones.filter(p => p.probabilidad < 40).length}
-        />
-
+        <Card icon={Brain} color="indigo" title="Total Predicciones" value={predicciones.length} />
+        <Card icon={AlertTriangle} color="rose" title="Críticas" value={predicciones.filter(p => p.probabilidad >= 80).length} />
+        <Card icon={Zap} color="amber" title="Eventos Próximos" value={predicciones.filter(p => p.probabilidad >= 60).length} />
+        <Card icon={Sparkles} color="emerald" title="Estables" value={predicciones.filter(p => p.probabilidad < 40).length} />
       </div>
 
       {/* GRÁFICOS + IA */}
@@ -111,9 +82,7 @@ export default function IAPage() {
               chart: { toolbar: { show: false } },
               colors: ["#6366f1"],
               stroke: { curve: "smooth" },
-              xaxis: {
-                categories: predicciones.map(p => p.fecha || "N/A"),
-              },
+              xaxis: { categories: predicciones.map(p => p.fecha || "N/A") },
             }}
           />
 
@@ -202,24 +171,11 @@ export default function IAPage() {
             type="ia"
           />
         </ChartCard>
-
       </div>
 
       {/* IA GLOBAL */}
-      <AICorrelationEngine
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
-      <AIPrioridad
-        riesgos={riesgos}
-        senales={senales}
-        decisiones={decisiones}
-        predicciones={predicciones}
-      />
-
+      <AICorrelationEngine riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
+      <AIPrioridad riesgos={riesgos} senales={senales} decisiones={decisiones} predicciones={predicciones} />
       <AIAnomalias
         title="Anomalías en Predicciones IA"
         riesgos={riesgos}
@@ -227,7 +183,6 @@ export default function IAPage() {
         decisiones={decisiones}
         predicciones={predicciones}
       />
-
     </div>
   );
 }

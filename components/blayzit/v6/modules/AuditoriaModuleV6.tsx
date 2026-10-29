@@ -1,10 +1,58 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+// Supabase correcto
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
+
+// UI
 import PremiumIcon from "@/components/blayzit/v6/ui/PremiumIcon";
 import NotaIA from "@/components/blayzit/v6/ui/NotaIA";
-import { FileSearch, Shield, Gauge, Activity } from "lucide-react";
+
+// IA Cognitiva
+import AIInsight from "@/components/blayzit/v6/ui/AIInsight";
+import AIScenarios from "@/components/blayzit/v6/ui/AIScenarios";
+import AICorrelationEngine from "@/components/blayzit/v6/ui/AICorrelationEngine";
+import AIPrioridad from "@/components/blayzit/v6/ui/AIPrioridad";
+import AIAnomalias from "@/components/blayzit/v6/ui/AIAnomalias";
+
+// Icons
+import { ShieldCheck, FileSearch, Activity } from "lucide-react";
 
 export default function AuditoriaModuleV6() {
+  const [eventos, setEventos] = useState([]);
+  const [riesgos, setRiesgos] = useState([]);
+  const [senales, setSenales] = useState([]);
+  const [decisiones, setDecisiones] = useState([]);
+  const [predicciones, setPredicciones] = useState([]);
+  const [telemetria, setTelemetria] = useState([]);
+
+  useEffect(() => {
+    cargarTodo();
+  }, []);
+
+  async function cargarTodo() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const [ev, r, s, d, p, t] = await Promise.all([
+      supabase.from("auditoria_eventos").select("*").eq("user_id", user.id),
+      supabase.from("adip_riesgos").select("*").eq("user_id", user.id),
+      supabase.from("dnip_senales").select("*").eq("user_id", user.id),
+      supabase.from("adip_decisiones").select("*").eq("user_id", user.id),
+      supabase.from("ia_predicciones").select("*").eq("user_id", user.id),
+      supabase.from("telemetry").select("*").eq("user_id", user.id),
+    ]);
+
+    setEventos(ev.data || []);
+    setRiesgos(r.data || []);
+    setSenales(s.data || []);
+    setDecisiones(d.data || []);
+    setPredicciones(p.data || []);
+    setTelemetria(t.data || []);
+  }
+
   return (
     <div className="space-y-12">
 
@@ -14,99 +62,137 @@ export default function AuditoriaModuleV6() {
       {/* HEADER DEL MÓDULO */}
       <section className="space-y-4">
         <div className="flex items-center gap-4">
-          <PremiumIcon icon={FileSearch} color="amber" size={26} />
+          <PremiumIcon icon={ShieldCheck} color="rose" size={26} />
           <div>
             <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">
-              Audit V6 · Auditoría Operativa
+              Auditoría Omniversal V6
             </h1>
             <p className="text-sm text-slate-500">
-              Revisión avanzada de eventos, decisiones y señales del sistema.
+              Auditoría completa del sistema · IA Cognitiva · Telemetría avanzada
             </p>
           </div>
         </div>
       </section>
 
-      {/* ESTADO DE AUDITORÍA */}
+      {/* EVENTOS DEL SISTEMA */}
       <section className="space-y-6">
         <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-          Estado de auditoría
+          Eventos del sistema
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {eventos.length === 0 ? (
+          <p className="text-sm text-slate-500">No hay eventos registrados.</p>
+        ) : (
+          <div className="space-y-3">
+            {eventos.map((e) => (
+              <div
+                key={e.id}
+                className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200 flex justify-between"
+              >
+                <div className="flex flex-col">
+                  <p className="text-lg font-semibold text-slate-900">
+                    {e.tipo}
+                  </p>
+                  <p className="text-sm text-slate-500">{e.descripcion}</p>
+                </div>
 
-          {/* MÉTRICA 1 */}
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200">
-            <PremiumIcon icon={FileSearch} color="amber" size={22} />
-            <h3 className="mt-4 text-lg font-semibold text-slate-900">
-              Eventos auditados
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Total de eventos revisados por el sistema.
-            </p>
-            <p className="mt-4 text-3xl font-bold text-amber-600">3,284</p>
+                <span className="text-xs text-slate-500">
+                  {new Date(e.creado_en).toLocaleString()}
+                </span>
+              </div>
+            ))}
           </div>
-
-          {/* MÉTRICA 2 */}
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200">
-            <PremiumIcon icon={Shield} color="rose" size={22} />
-            <h3 className="mt-4 text-lg font-semibold text-slate-900">
-              Riesgos detectados
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Riesgos encontrados durante auditorías.
-            </p>
-            <p className="mt-4 text-3xl font-bold text-rose-600">12</p>
-          </div>
-
-          {/* MÉTRICA 3 */}
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200">
-            <PremiumIcon icon={Gauge} color="purple" size={22} />
-            <h3 className="mt-4 text-lg font-semibold text-slate-900">
-              Precisión del sistema
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Nivel de precisión en auditorías automáticas.
-            </p>
-            <p className="mt-4 text-3xl font-bold text-purple-600">94%</p>
-          </div>
-
-        </div>
+        )}
       </section>
 
-      {/* SECCIÓN DE AUDITORÍA AVANZADA */}
+      {/* TELEMETRÍA */}
       <section className="space-y-6">
         <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-          Auditoría avanzada
+          Auditoría de telemetría
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {telemetria.length === 0 ? (
+          <p className="text-sm text-slate-500">No hay telemetría registrada.</p>
+        ) : (
+          <div className="space-y-3">
+            {telemetria.map((t) => (
+              <div
+                key={t.id}
+                className="p-6 rounded-2xl bg-slate-50 shadow-sm border border-slate-200 flex justify-between"
+              >
+                <div className="flex flex-col">
+                  <p className="text-lg font-semibold text-slate-900">
+                    Actividad: {t.actividad}
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    Latencia: {t.latencia}ms · Estabilidad: {t.estabilidad}%
+                  </p>
+                </div>
 
-          {/* TARJETA 1 */}
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200">
-            <PremiumIcon icon={Activity} color="red" size={22} />
-            <h3 className="mt-4 text-lg font-semibold text-slate-900">
-              Análisis de actividad
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Revisión de actividad operativa reciente.
-            </p>
-            <p className="mt-4 text-2xl font-bold text-red-600">Activo</p>
+                <span className="text-xs text-slate-500">
+                  {new Date(t.creado_en).toLocaleString()}
+                </span>
+              </div>
+            ))}
           </div>
-
-          {/* TARJETA 2 */}
-          <div className="p-6 rounded-2xl bg-white shadow-sm border border-slate-200">
-            <PremiumIcon icon={FileSearch} color="blue" size={22} />
-            <h3 className="mt-4 text-lg font-semibold text-slate-900">
-              Registros detallados
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Registros completos de auditoría del sistema.
-            </p>
-            <p className="mt-4 text-2xl font-bold text-blue-600">482</p>
-          </div>
-
-        </div>
+        )}
       </section>
+
+      {/* IA GLOBAL */}
+      <AICorrelationEngine
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+        eventos={eventos}
+      />
+
+      <AIPrioridad
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+        eventos={eventos}
+      />
+
+      <AIAnomalias
+        title="Anomalías globales detectadas por IA"
+        riesgos={riesgos}
+        senales={senales}
+        decisiones={decisiones}
+        predicciones={predicciones}
+        telemetria={telemetria}
+        eventos={eventos}
+      />
+
+      <AIInsight
+        title="Explicación IA"
+        data={[
+          riesgos.length,
+          senales.length,
+          decisiones.length,
+          predicciones.length,
+          telemetria.length,
+          eventos.length,
+        ]}
+        type="auditoria"
+        timeframe="30d"
+      />
+
+      <AIScenarios
+        title="Escenarios IA"
+        data={[
+          riesgos.length,
+          senales.length,
+          decisiones.length,
+          predicciones.length,
+          telemetria.length,
+          eventos.length,
+        ]}
+        type="auditoria"
+      />
 
     </div>
   );

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import { Bot, Brain, Radar, Shield, Activity } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Supabase (CORRECTO)
+import { createClient } from "@/lib/supabase/client";
+const supabase = createClient();
+
+// Icons
+import { Bot, Brain, Radar, Shield, Activity } from "lucide-react";
 
 export default function IAOperacionesPage() {
   const [estado, setEstado] = useState("");
@@ -17,6 +17,7 @@ export default function IAOperacionesPage() {
     calcularRecomendacion();
   }, []);
 
+  /* ========================= RECOMENDACIÓN IA ========================= */
   async function calcularRecomendacion() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -42,6 +43,7 @@ export default function IAOperacionesPage() {
     }
   }
 
+  /* ========================= EJECUTAR SEGÚN IA ========================= */
   async function ejecutarSegunIA() {
     if (!recomendacion) return;
 
@@ -50,6 +52,7 @@ export default function IAOperacionesPage() {
 
     setEstado("Ejecutando operaciones según recomendación IA...");
 
+    /* ADIP + IA Predictiva */
     if (recomendacion.includes("ADIP") && recomendacion.includes("IA Predictiva")) {
       await supabase.from("adip_riesgos").insert({
         user_id: user.id,
@@ -68,7 +71,10 @@ export default function IAOperacionesPage() {
         criticidad: 5,
         estado: "activa",
       });
-    } else if (recomendacion.includes("ADIP")) {
+    }
+
+    /* Solo ADIP */
+    else if (recomendacion.includes("ADIP")) {
       await supabase.from("adip_riesgos").insert({
         user_id: user.id,
         nivel: 3,
@@ -76,7 +82,10 @@ export default function IAOperacionesPage() {
         categoria: "operativo",
         estado: "activo",
       });
-    } else {
+    }
+
+    /* DNIP + Telemetría */
+    else {
       await supabase.from("dnip_senales").insert({
         user_id: user.id,
         tipo: "operativa",
@@ -86,12 +95,13 @@ export default function IAOperacionesPage() {
         estado: "activa",
       });
 
-      await supabase.from("telemetria_sistema").insert({
+      await supabase.from("telemetry").insert({
         user_id: user.id,
         actividad: Math.floor(Math.random() * 100),
         latencia: Math.floor(Math.random() * 120),
         estabilidad: Math.floor(Math.random() * 100),
         descripcion: "Registro generado por recomendación IA",
+        nivel: "normal",
       });
     }
 
@@ -112,6 +122,7 @@ export default function IAOperacionesPage() {
         </div>
       )}
 
+      {/* CARD PRINCIPAL */}
       <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4">
         <div className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-slate-700" />
@@ -132,6 +143,7 @@ export default function IAOperacionesPage() {
         </button>
       </div>
 
+      {/* MINI ICONS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <MiniIcon label="DNIP" icon={<Radar className="h-5 w-5 text-cyan-600" />} />
         <MiniIcon label="ADIP" icon={<Shield className="h-5 w-5 text-rose-600" />} />
